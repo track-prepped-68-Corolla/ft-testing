@@ -62,6 +62,12 @@ jobs:
             --apply 'builtins.mapAttrs (_: m: m.config.system.build.toplevel.drvPath)' \
             2>&1 | tee /tmp/ci-eval.log; exit ${PIPESTATUS[0]}
 
+      # Assert the downstream option values ft.vendorHw / ft.gpu must derive
+      # from each fixtures/vendorHw report (eval-only, no builds).
+      - name: vendorHw detection assertions
+        shell: bash
+        run: ./scripts/check-vendorHw.sh 2>&1 | tee /tmp/ci-vendorhw.log; exit ${PIPESTATUS[0]}
+
       - name: Secret scan
         uses: trufflesecurity/trufflehog@main
         with:
@@ -99,6 +105,7 @@ jobs:
               'Auto-format (treefmt)': '/tmp/ci-fmt.log',
               'nix flake check': '/tmp/ci-check.log',
               'Evaluate NixOS configurations': '/tmp/ci-eval.log',
+              'vendorHw detection assertions': '/tmp/ci-vendorhw.log',
             };
 
             const MAX_LOG_CHARS = 6000;
