@@ -68,6 +68,11 @@ jobs:
         shell: bash
         run: ./scripts/check-vendorHw.sh 2>&1 | tee /tmp/ci-vendorhw.log; exit ${PIPESTATUS[0]}
 
+      # Same pattern for ft.gpu vendor/PRIME detection (fixtures/gpu).
+      - name: gpu detection assertions
+        shell: bash
+        run: ./scripts/check-gpu.sh 2>&1 | tee /tmp/ci-gpu.log; exit ${PIPESTATUS[0]}
+
       - name: Secret scan
         uses: trufflesecurity/trufflehog@main
         with:
@@ -106,6 +111,7 @@ jobs:
               'nix flake check': '/tmp/ci-check.log',
               'Evaluate NixOS configurations': '/tmp/ci-eval.log',
               'vendorHw detection assertions': '/tmp/ci-vendorhw.log',
+              'gpu detection assertions': '/tmp/ci-gpu.log',
             };
 
             const MAX_LOG_CHARS = 6000;

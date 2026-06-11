@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "hardware": {
+    "graphics_card": [
+      {
+        "vendor": {
+          "hex": "10de",
+          "name": "nVidia Corporation"
+        },
+        "device": {
+          "hex": "1b80",
+          "name": "GP104 [GeForce GTX 1080]"
+        },
+        "driver": "nvidia",
+        "sysfs_bus_id": "0000:01:00.0"
+      }
+    ]
+  }
+}
