@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "dmi": {
+    "system": {
+      "manufacturer": "Generic Handheld Co."
+    },
+    "chassis": {
+      "type": 11
+    }
+  }
+}

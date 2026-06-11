@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "dmi": {
+    "system": {
+      "manufacturer": "Micro-Star International Co., Ltd.",
+      "product_name": "Katana GF66"
+    }
+  }
+}

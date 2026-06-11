@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "dmi": {
+    "system": {
+      "manufacturer": "ASUSTeK COMPUTER INC.",
+      "family": "ROG Zephyrus",
+      "product_name": "ROG Zephyrus G14"
+    }
+  },
+  "hardware": {
+    "usb": [
+      {
+        "vendor": {
+          "hex": "1532",
+          "name": "Razer USA, Ltd"
+        }
+      }
+    ]
+  }
+}

@@ -51,9 +51,14 @@ in
       imports = [ inputs.ft-framework.nixosModules.default ];
       # disko-btrfs: hardware-dependent disk layout, no VM test.
       # gaming: Steam and its closure are too heavyweight for CI VM tests.
+      # nixos-facter-modules system.nix: always contributes a
+      # nixpkgs.hostPlatform definition (even when its mkIf condition is
+      # false), and the test framework's read-only pkgs mode rejects any
+      # second definition of a read-only option before mkIf filtering.
       disabledModules = [
         "${inputs.ft-framework}/modules/nixos/hardware/disko-btrfs.nix"
         "${inputs.ft-framework}/modules/nixos/profiles/gaming.nix"
+        "${mergedInputs.nixos-facter-modules}/modules/nixos/system.nix"
       ];
       ft.core.stateVersion = "25.05";
       ft.users.initialPasswords.admin = "test";

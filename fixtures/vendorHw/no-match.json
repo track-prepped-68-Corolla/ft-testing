@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "dmi": {
+    "system": {
+      "manufacturer": "Dell Inc.",
+      "product_name": "XPS 13 9310"
+    }
+  },
+  "hardware": {
+    "usb": []
+  }
+}

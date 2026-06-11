@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "hardware": {
+    "usb": [
+      {
+        "vendor": {
+          "hex": "1b1c",
+          "name": "Corsair"
+        }
+      }
+    ]
+  }
+}
