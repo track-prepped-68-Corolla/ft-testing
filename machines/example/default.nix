@@ -36,13 +36,13 @@
 
   # --- FEATURE TOGGLES ---
   # Hardware detection: replaces hardware-configuration.nix with facter.json.
-  ft.hardware.facter = {
+  ft.facter = {
     enable = true;
     reportPath = ./var/facter.json;
   };
 
   # Universal GPU module — autodetects the vendor from facter.json.
-  ft.hardware.gpu.enable = true;
+  ft.gpu.enable = true;
 
   # The `ft` CLI helper. Requires ft.repoPath to locate scripts/ at runtime.
   ft.cli.enable = true;

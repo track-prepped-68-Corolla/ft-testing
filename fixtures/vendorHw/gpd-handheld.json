@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "dmi": {
+    "system": {
+      "manufacturer": "GPD",
+      "product_name": "G1618-04"
+    }
+  }
+}

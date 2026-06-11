@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "dmi": {
+    "system": {
+      "manufacturer": "LENOVO",
+      "family": "Legion 5 Pro Series",
+      "product_name": "82JQ"
+    }
+  }
+}
