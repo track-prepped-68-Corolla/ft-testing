@@ -64,6 +64,14 @@ check gpu-intel-single 'builtins.elem "intel" config.services.xserver.videoDrive
 # --- AMD reported via bound driver only (no vendor ID) -------------------------
 check gpu-amd-driver-only 'builtins.elem "amdgpu" config.services.xserver.videoDrivers' true
 
+# --- Optimus with Intel iGPU (the common pairing): PRIME via intelBusId -------
+check gpu-optimus-intel 'builtins.elem "nvidia" config.services.xserver.videoDrivers' true
+check gpu-optimus-intel 'config.ft.cardwire.enable' true
+check gpu-optimus-intel 'config.hardware.nvidia.prime.offload.enable' true
+check gpu-optimus-intel 'config.hardware.nvidia.prime.intelBusId' '"PCI:0:2:0"'
+check gpu-optimus-intel 'config.hardware.nvidia.prime.nvidiaBusId' '"PCI:1:0:0"'
+check gpu-optimus-intel 'config.hardware.nvidia.powerManagement.finegrained' true
+
 # --- Optimus with AMD iGPU: PRIME via amdgpuBusId + cardwire -------------------
 check gpu-optimus-amd 'builtins.elem "nvidia" config.services.xserver.videoDrivers' true
 check gpu-optimus-amd 'config.ft.cardwire.enable' true
