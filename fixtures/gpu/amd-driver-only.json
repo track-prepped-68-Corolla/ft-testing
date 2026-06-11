@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "hardware": {
+    "graphics_card": [
+      {
+        "device": {
+          "name": "Unidentified AMD card reported only via its bound driver"
+        },
+        "driver": "amdgpu",
+        "sysfs_bus_id": "0000:03:00.0"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "hardware": {
+    "graphics_card": [
+      {
+        "vendor": {
+          "hex": "8086",
+          "name": "Intel Corporation"
+        },
+        "device": {
+          "hex": "46a6",
+          "name": "Alder Lake-P GT2 [Iris Xe Graphics]"
+        },
+        "driver": "i915",
+        "sysfs_bus_id": "0000:00:02.0"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "hardware": {
+    "graphics_card": [
+      {
+        "vendor": {
+          "hex": "1af4",
+          "name": "Red Hat, Inc."
+        },
+        "device": {
+          "hex": "1050",
+          "name": "Virtio GPU"
+        },
+        "driver": "virtio_gpu",
+        "sysfs_bus_id": "0000:00:01.0"
+      }
+    ]
+  }
+}

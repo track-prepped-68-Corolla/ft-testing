@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "hardware": {
+    "graphics_card": [
+      {
+        "vendor": {
+          "hex": "10de",
+          "name": "nVidia Corporation"
+        },
+        "device": {
+          "hex": "2560",
+          "name": "GA106M [GeForce RTX 3060 Mobile / Max-Q]"
+        },
+        "driver": "nvidia",
+        "sysfs_bus_id": "0000:01:00.0"
+      }
+    ]
+  }
+}

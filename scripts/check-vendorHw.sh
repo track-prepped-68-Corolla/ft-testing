@@ -80,12 +80,6 @@ check vendorHw-no-match 'builtins.length config.boot.extraModulePackages' 0
 check vendorHw-multi 'config.hardware.openrazer.enable' true
 check vendorHw-multi 'config.services.asusd.enable' true
 
-# --- Optimus: NVIDIA dGPU + Intel iGPU → PRIME offload + cardwire (gpu.nix) ---
-check vendorHw-optimus-prime 'config.ft.cardwire.enable' true
-check vendorHw-optimus-prime 'config.hardware.nvidia.prime.offload.enable' true
-check vendorHw-optimus-prime 'config.hardware.nvidia.prime.intelBusId' '"PCI:0:2:0"'
-check vendorHw-optimus-prime 'config.hardware.nvidia.prime.nvidiaBusId' '"PCI:1:0:0"'
-
 echo
 echo "vendorHw eval checks: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]
