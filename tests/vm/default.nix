@@ -31,6 +31,7 @@ lib.foldl lib.recursiveUpdate { } (
     ./cli.nix
     ./mullet.nix
     ./facter.nix
+    ./vendor-hw.nix
     ./rclone.nix
     ./wine.nix
   ]
