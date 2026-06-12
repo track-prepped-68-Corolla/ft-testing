@@ -15,7 +15,7 @@
 #              input set in node.specialArgs so every node receives the same
 #              `inputs` that real machines get from the generator.
 # =============================================================================
-{ inputs, nixpkgs }:
+{ inputs, ... }:
 let
   fw = inputs.ft-framework;
   mkTest = fw.lib.mkVmTest inputs;
