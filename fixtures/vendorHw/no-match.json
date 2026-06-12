@@ -1,10 +1,12 @@
 {
   "version": 1,
   "system": "x86_64-linux",
-  "dmi": {
+  "smbios": {
     "system": {
+      "handle": 1,
       "manufacturer": "Dell Inc.",
-      "product_name": "XPS 13 9310"
+      "product": "XPS 13 9310",
+      "version": "1.0"
     }
   },
   "hardware": {

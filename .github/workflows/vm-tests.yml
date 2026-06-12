@@ -42,5 +42,6 @@ jobs:
             .#vm-cli-load \
             .#vm-mullet-load \
             .#vm-facter-load \
+            .#vm-vendor-hw-asus \
             .#vm-rclone-load \
             .#vm-wine-load

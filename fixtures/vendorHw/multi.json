@@ -1,11 +1,12 @@
 {
   "version": 1,
   "system": "x86_64-linux",
-  "dmi": {
+  "smbios": {
     "system": {
+      "handle": 1,
       "manufacturer": "ASUSTeK COMPUTER INC.",
-      "family": "ROG Zephyrus",
-      "product_name": "ROG Zephyrus G14"
+      "product": "ROG Zephyrus G14",
+      "version": "1.0"
     }
   },
   "hardware": {
