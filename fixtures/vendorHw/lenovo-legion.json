@@ -1,11 +1,12 @@
 {
   "version": 1,
   "system": "x86_64-linux",
-  "dmi": {
+  "smbios": {
     "system": {
+      "handle": 1,
       "manufacturer": "LENOVO",
-      "family": "Legion 5 Pro Series",
-      "product_name": "82JQ"
+      "product": "Legion 5 Pro 16ACH6H",
+      "version": "IdeaPad 5 Pro 16ACH6"
     }
   }
 }

@@ -1,12 +1,24 @@
 {
   "version": 1,
   "system": "x86_64-linux",
-  "dmi": {
+  "smbios": {
     "system": {
-      "manufacturer": "Generic Handheld Co."
+      "handle": 1,
+      "manufacturer": "Generic Handheld Co.",
+      "product": "Generic Handheld",
+      "version": "1.0"
     },
-    "chassis": {
-      "type": 11
-    }
+    "chassis": [
+      {
+        "handle": 3,
+        "manufacturer": "Generic Handheld Co.",
+        "version": "1.0",
+        "chassis_type": {
+          "hex": "000b",
+          "name": "Hand Held",
+          "value": 11
+        }
+      }
+    ]
   }
 }
