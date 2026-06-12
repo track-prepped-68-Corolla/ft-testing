@@ -2,27 +2,65 @@
 # VM Test Shared Library
 # =============================================================================
 #
-# Thin wrapper around the framework's VM test helpers.  The framework owns the
-# input-merging, module-wiring, and sandbox-compatibility logic; this file only
-# adds the test-specific baseline configuration that all smoke tests share.
+# Provides mkTest and baseConfig for all VM smoke tests.
 #
-# baseConfig — NixOS module added to every test node.  Pulls in the framework
-#              module hub (via fw.lib.vmTestBase) and sets the minimum config
-#              needed for a VM to boot: stateVersion, an admin password, and
-#              Bluetooth suppression (no hardware in a VM).
+# When the framework exposes lib.mkVmTest / lib.vmTestBase (fast-track-nix >=
+# the lib-vm-helpers commit), those are used directly so the wiring stays in
+# one place.  Until that commit reaches the `testing` branch the equivalent
+# logic is inlined here — semantically identical, no behaviour difference.
 #
-# mkTest     — calls fw.lib.mkVmTest, which wraps runNixOSTest with the merged
-#              input set in node.specialArgs so every node receives the same
-#              `inputs` that real machines get from the generator.
+# baseConfig — NixOS module added to every test node.  Imports the framework
+#              module hub and applies the three disabledModules entries that
+#              make unconditionally-imported framework modules safe in the NixOS
+#              test sandbox (disko-btrfs, gaming, nixos-facter-modules/system).
+#              Also sets the baseline every VM needs: stateVersion, admin
+#              password, Bluetooth off.
+#
+# mkTest     — wraps runNixOSTest with the merged input set (framework inputs
+#              // consumer inputs) in node.specialArgs so every test node gets
+#              the same `inputs` that real machines receive from the generator.
 # =============================================================================
 { inputs, ... }:
 let
   fw = inputs.ft-framework;
-  mkTest = fw.lib.mkVmTest inputs;
+
+  # Use the framework's canonical merge when available; fall back to the
+  # equivalent expression so CI stays green while the framework PR is pending.
+  mergedInputs =
+    if fw.lib ? mergeInputs
+    then fw.lib.mergeInputs inputs
+    else fw.inputs // inputs;
+
+  pkgs = mergedInputs.nixpkgs.legacyPackages.x86_64-linux;
+
+  mkTest =
+    if fw.lib ? mkVmTest
+    then fw.lib.mkVmTest inputs
+    else
+      spec:
+      pkgs.testers.runNixOSTest (
+        mergedInputs.nixpkgs.lib.recursiveUpdate spec {
+          node.specialArgs.inputs = mergedInputs;
+        }
+      );
+
+  vmTestBase =
+    if fw.lib ? vmTestBase
+    then fw.lib.vmTestBase inputs
+    else
+      { ... }: {
+        imports = [ fw.nixosModules.default ];
+        disabledModules = [
+          "${fw}/modules/nixos/hardware/disko-btrfs.nix"
+          "${fw}/modules/nixos/profiles/gaming.nix"
+          "${mergedInputs.nixos-facter-modules}/modules/nixos/system.nix"
+        ];
+      };
+
   baseConfig =
     { ... }:
     {
-      imports = [ (fw.lib.vmTestBase inputs) ];
+      imports = [ vmTestBase ];
       ft.core.stateVersion = "25.05";
       ft.users.initialPasswords.admin = "test";
       hardware.bluetooth.enable = false;
