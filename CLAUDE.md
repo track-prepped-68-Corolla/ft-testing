@@ -82,12 +82,20 @@ nix build -L --no-link \
 
 **Trigger all:** `VM Smoke Tests` workflow → `workflow_dispatch`.
 
-`tests/vm/lib.nix` provides `baseConfig` (framework modules only) and `mkTest`
-(wraps `runNixOSTest` with `node.specialArgs.inputs = mergedInputs`, where
-`mergedInputs = inputs.ft-framework.inputs // inputs`). Every test must assert
-at least one **runtime effect** (service active, binary on PATH, file present),
-not merely that the config evaluates. After adding a test file, register it in
-`tests/vm/default.nix` and `.github/workflows/vm-tests.yml`.
+`tests/vm/lib.nix` is a thin wrapper around the framework's VM test helpers:
+
+- `mkTest` — calls `inputs.ft-framework.lib.mkVmTest inputs`, which wraps
+  `runNixOSTest` with the merged input set (`lib.mergeInputs`) in
+  `node.specialArgs` so every node gets the same `inputs` that real machines
+  receive from the generator.
+- `baseConfig` — imports `inputs.ft-framework.lib.vmTestBase inputs` (the
+  framework module hub + sandbox-compatible `disabledModules`) and adds the
+  test-specific baseline: `stateVersion`, admin password, no Bluetooth.
+
+Every test must assert at least one **runtime effect** (service active, binary
+on PATH, file present), not merely that the config evaluates. After adding a
+test file, register it in `tests/vm/default.nix` and
+`.github/workflows/vm-tests.yml`.
 
 ---
 

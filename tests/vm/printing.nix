@@ -14,7 +14,11 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      machine.wait_for_unit("cups.service")
+      # cups.service is socket-activated — it shuts down after the printer
+      # configuration script runs. Check the socket (always active) and verify
+      # CUPS actually responds to a request instead.
+      machine.wait_for_unit("cups.socket")
+      machine.succeed("lpstat -r")
       machine.wait_for_unit("avahi-daemon.service")
     '';
   };

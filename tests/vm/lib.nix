@@ -2,66 +2,70 @@
 # VM Test Shared Library
 # =============================================================================
 #
-# Provides one base NixOS module config and a test runner for all VM smoke
-# tests:
+# Provides mkTest and baseConfig for all VM smoke tests.
 #
-#   baseConfig — framework modules only (this consumer has no modules of its
-#                own; every module under test lives in fast-track-nix)
-#   mkTest     — wraps pkgs.testers.runNixOSTest with node.specialArgs so every
-#                node receives `inputs` via specialArgs rather than _module.args,
-#                making it safe to reference inputs inside `imports`.
+# When the framework exposes lib.mkVmTest / lib.vmTestBase (fast-track-nix >=
+# the lib-vm-helpers commit), those are used directly so the wiring stays in
+# one place.  Until that commit reaches the `testing` branch the equivalent
+# logic is inlined here — semantically identical, no behaviour difference.
 #
-# mergedInputs replicates what lib.mkFlake does (framework inputs merged with
-# this consumer's inputs) so framework modules that reference inputs.* at import
-# time (sops-nix, nix-index-database, nixos-facter-modules, etc.) evaluate
-# correctly inside the test's NixOS module system.
+# baseConfig — NixOS module added to every test node.  Imports the framework
+#              module hub and applies the three disabledModules entries that
+#              make unconditionally-imported framework modules safe in the NixOS
+#              test sandbox (disko-btrfs, gaming, nixos-facter-modules/system).
+#              Also sets the baseline every VM needs: stateVersion, admin
+#              password, Bluetooth off.
 #
-# disko-btrfs and gaming.nix are excluded via disabledModules — see inline
-# comments for the reason each is disabled.
+# mkTest     — wraps runNixOSTest with the merged input set (framework inputs
+#              // consumer inputs) in node.specialArgs so every test node gets
+#              the same `inputs` that real machines receive from the generator.
 # =============================================================================
-{ inputs, nixpkgs }:
-
+{ inputs, ... }:
 let
-  pkgs = nixpkgs.legacyPackages.x86_64-linux;
+  fw = inputs.ft-framework;
 
-  # The framework's own inputs merged with this consumer's inputs — mirrors the
-  # merge that lib.mkFlake performs so all framework modules receive the inputs
-  # they were authored against.
-  mergedInputs = inputs.ft-framework.inputs // inputs;
-in
-{
-  # Wraps runNixOSTest with node.specialArgs so every node's NixOS module system
-  # receives `inputs` at specialArgs scope — available when `imports` lists are
-  # evaluated, unlike _module.args which is part of the config fixed-point and
-  # causes infinite recursion when referenced in `imports`.
+  # Use the framework's canonical merge when available; fall back to the
+  # equivalent expression so CI stays green while the framework PR is pending.
+  mergedInputs =
+    if fw.lib ? mergeInputs
+    then fw.lib.mergeInputs inputs
+    else fw.inputs // inputs;
+
+  pkgs = mergedInputs.nixpkgs.legacyPackages.x86_64-linux;
+
   mkTest =
-    spec:
-    pkgs.testers.runNixOSTest (
-      nixpkgs.lib.recursiveUpdate spec {
-        node.specialArgs.inputs = mergedInputs;
-      }
-    );
+    if fw.lib ? mkVmTest
+    then fw.lib.mkVmTest inputs
+    else
+      spec:
+      pkgs.testers.runNixOSTest (
+        mergedInputs.nixpkgs.lib.recursiveUpdate spec {
+          node.specialArgs.inputs = mergedInputs;
+        }
+      );
 
-  # ---------------------------------------------------------------------------
-  # baseConfig: framework modules only.
-  # ---------------------------------------------------------------------------
+  vmTestBase =
+    if fw.lib ? vmTestBase
+    then fw.lib.vmTestBase inputs
+    else
+      { ... }: {
+        imports = [ fw.nixosModules.default ];
+        disabledModules = [
+          "${fw}/modules/nixos/hardware/disko-btrfs.nix"
+          "${fw}/modules/nixos/profiles/gaming.nix"
+          "${mergedInputs.nixos-facter-modules}/modules/nixos/system.nix"
+        ];
+      };
+
   baseConfig =
     { ... }:
     {
-      imports = [ inputs.ft-framework.nixosModules.default ];
-      # disko-btrfs: hardware-dependent disk layout, no VM test.
-      # gaming: Steam and its closure are too heavyweight for CI VM tests.
-      # nixos-facter-modules system.nix: always contributes a
-      # nixpkgs.hostPlatform definition (even when its mkIf condition is
-      # false), and the test framework's read-only pkgs mode rejects any
-      # second definition of a read-only option before mkIf filtering.
-      disabledModules = [
-        "${inputs.ft-framework}/modules/nixos/hardware/disko-btrfs.nix"
-        "${inputs.ft-framework}/modules/nixos/profiles/gaming.nix"
-        "${mergedInputs.nixos-facter-modules}/modules/nixos/system.nix"
-      ];
+      imports = [ vmTestBase ];
       ft.core.stateVersion = "25.05";
       ft.users.initialPasswords.admin = "test";
       hardware.bluetooth.enable = false;
     };
+in
+{
+  inherit mkTest baseConfig;
 }
