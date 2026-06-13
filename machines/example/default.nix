@@ -8,10 +8,10 @@
 # of framework features and reads its hardware report from var/facter.json.
 #
 # WHAT GOES HERE
-#   var/facter.json       hardware report — source of truth for system arch
-#   modules/disko.nix     declarative disk layout for this machine
-#   Identity              hostName, ft.users.mainUser, ft.users.superUsers
-#   ft.* feature toggles  enable framework modules
+#   var/facter.json         hardware report — source of truth for system arch
+#   ft.diskBtrfs.device     block device for the system disk (default: /dev/nvme0n1)
+#   Identity                hostName, ft.users.mainUser, ft.users.superUsers
+#   ft.* feature toggles    enable framework modules
 #
 # Do not import framework modules directly — the generator injects them.
 # =============================================================================
@@ -28,6 +28,12 @@
     mainUser = "example";
     superUsers = [ "example" ];
     initialPasswords.example = "nixos";
+  };
+
+  # --- DISK (btrfs: @ @home @nix @snapshots; /dev/vda suits QEMU VMs) ---
+  ft.diskBtrfs = {
+    enable = true;
+    device = "/dev/vda";
   };
 
   # --- BOOT (systemd-boot keeps the template QEMU/UEFI-friendly) ---
