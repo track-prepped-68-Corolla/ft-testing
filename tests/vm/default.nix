@@ -34,6 +34,5 @@ lib.foldl lib.recursiveUpdate { } (
     ./vendor-hw.nix
     ./rclone.nix
     ./wine.nix
-    ./git-workflow.nix
   ]
 )
