@@ -18,6 +18,7 @@ in
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
+          extraSpecialArgs = { inputs = mergedInputs; };
           users.admin = {
             imports = [ fw.homeManagerModules.default ];
             ft.core = {
