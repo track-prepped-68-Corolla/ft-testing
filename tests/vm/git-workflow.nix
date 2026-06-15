@@ -33,12 +33,12 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      machine.succeed("su - admin -c 'which conform'")
-      machine.succeed("su - admin -c 'which convco'")
-      machine.succeed("su - admin -c 'which lefthook'")
       machine.succeed("test -x /home/admin/.config/git/hooks/pre-commit")
       machine.succeed("test -x /home/admin/.config/git/hooks/commit-msg")
       machine.succeed("test -x /home/admin/.config/git/hooks/prepare-commit-msg")
+      machine.succeed("test -e /home/admin/.nix-profile/bin/conform")
+      machine.succeed("test -e /home/admin/.nix-profile/bin/convco")
+      machine.succeed("test -e /home/admin/.nix-profile/bin/lefthook")
     '';
   };
 }
