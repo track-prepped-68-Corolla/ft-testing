@@ -16,8 +16,6 @@ in
           mergedInputs.home-manager.nixosModules.home-manager
         ];
         home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
           extraSpecialArgs = { inputs = mergedInputs; };
           users.admin = {
             imports = [ fw.homeManagerModules.default ];
