@@ -2,7 +2,7 @@
 
 fmt:
     echo ":: Formatting ::"
-    find . -name "*.nix" -exec nixfmt {} +
+    treefmt
 
 check: fmt
     echo ":: Scanning for leaked secrets ::"
@@ -27,10 +27,13 @@ test: check
 
 # --- 3. Core Workflow ---
 
-switch: check
+switch:
     #!/usr/bin/env bash
     set -e
     just --justfile "{{justfile()}}" _check-reqs
+
+    echo ":: Formatting ::"
+    treefmt
 
     echo ":: Previewing Build ::"
     just --justfile "{{justfile()}}" _stage
@@ -49,9 +52,9 @@ switch: check
       NVD_DIFF=$(nvd --color never diff $(just --justfile "{{justfile()}}" _last-two-gens))
 
       if ! git diff --cached --quiet; then
-          echo ""
-          read -p "Commit message: " msg
-          git commit -m "$msg" -m "Generation: $GEN" -m "$NVD_DIFF"
+          GIT_DIR=$(git rev-parse --git-dir)
+          printf 'Generation: %s\n\n%s' "$GEN" "$NVD_DIFF" > "${GIT_DIR}/FT_SWITCH_INFO"
+          convco commit
       else
           echo ":: No source changes detected. Skipping git commit. ::"
       fi
@@ -120,7 +123,7 @@ rollback:
 
 _check-reqs:
     #!/usr/bin/env bash
-    for cmd in nh nvd delta; do
+    for cmd in nh nvd delta convco treefmt; do
       if ! command -v $cmd &> /dev/null; then echo "Error: $cmd is not installed."; exit 1; fi
     done
 

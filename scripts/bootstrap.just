@@ -113,7 +113,7 @@ in
 }
 EOF
     git add "var/local/" "${MACHINE_DIR}/"
-    git diff --cached --quiet || git commit -m "bootstrap: scaffold machine ${NAME}"
+    git diff --cached --quiet || git commit -m "chore(bootstrap): scaffold machine ${NAME}"
     echo ":: Machine ${NAME} scaffolded at ${MACHINE_DIR} ::"
     just --justfile "{{justfile()}}" generate-facts "${NAME}" "${IP}"
 
@@ -143,7 +143,7 @@ generate-facts name ip:
       "nix run github:numtide/nixos-facter -- -o /tmp/facter.json && cat /tmp/facter.json" \
       > "machines/${NAME}/var/facter.json"
     git add "machines/${NAME}/var/facter.json"
-    git diff --cached --quiet || git commit -m "bootstrap: hardware facts for ${NAME}"
+    git diff --cached --quiet || git commit -m "chore(bootstrap): add facter report for ${NAME}"
     echo ":: machines/${NAME}/var/facter.json written ::"
 
 # Install NixOS on target via nixos-anywhere.
