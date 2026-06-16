@@ -37,7 +37,7 @@
   # --- FEATURE TOGGLES ---
   ft.core.stateVersion = "25.05";
   ft.cli.enable = true;
-  ft.repoPath = "/home/example/nixos-config";
+  ft.repoPath = "/home/example/ft-testing";
 
   nixpkgs.hostPlatform = "x86_64-linux";
 

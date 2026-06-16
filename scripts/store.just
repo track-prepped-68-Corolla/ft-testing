@@ -22,7 +22,7 @@ store-custom APP_NAME +PATHS:
     set -euo pipefail
 
     APP="{{APP_NAME}}"
-    REPO="${FT_REPO_PATH:-$HOME/git/nixos-config}"
+    REPO="${FT_REPO_PATH:-$HOME/git/ft-testing}"
     LOCAL_DB="$REPO/mackup-local"
     
     mkdir -p "$LOCAL_DB"
@@ -53,7 +53,7 @@ _store_single APP_NAME:
     set -euo pipefail
 
     APP="{{APP_NAME}}"
-    REPO="${FT_REPO_PATH:-$HOME/git/nixos-config}"
+    REPO="${FT_REPO_PATH:-$HOME/git/ft-testing}"
     DOTFILES="$REPO/users/$USER/dotfiles"
     LOCAL_DB="$REPO/mackup-local"
     CFG_FILE="/tmp/mackup-${APP}.cfg"
@@ -78,7 +78,7 @@ _store_all:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    REPO="${FT_REPO_PATH:-$HOME/git/nixos-config}"
+    REPO="${FT_REPO_PATH:-$HOME/git/ft-testing}"
     LOCAL_DB="$REPO/mackup-local"
     TMP_DIR=$(mktemp -d)
     trap 'rm -rf "$TMP_DIR"' EXIT
@@ -149,9 +149,9 @@ _process_cfg APP CFG_FILE:
 
     APP="{{APP}}"
     CFG_FILE="{{CFG_FILE}}"
-    REPO="${FT_REPO_PATH:-$HOME/git/nixos-config}"
+    REPO="${FT_REPO_PATH:-$HOME/git/ft-testing}"
     DOTFILES="$REPO/users/$USER/dotfiles"
-    
+
     echo ":: Storing $APP into $DOTFILES ::"
 
     SECTION=""

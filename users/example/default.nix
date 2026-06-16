@@ -27,7 +27,7 @@
 
   # Point this at the absolute path of the cloned repo on the target to enable
   # the out-of-store dotfile symlinks (terminal, lazyvim, dotfiles modules).
-  ft.repoPath = lib.mkDefault "/home/example/nixos-config";
+  ft.repoPath = lib.mkDefault "/home/example/ft-testing";
 
   # --- ENVIRONMENT ---
   home.sessionVariables.EDITOR = "nvim";
