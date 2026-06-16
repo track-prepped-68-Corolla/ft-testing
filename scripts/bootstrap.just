@@ -14,7 +14,7 @@ git-init:
     }
     GIT_NAME=$(_rp "user-name"  "Git user name")
     GIT_EMAIL=$(_rp "user-email" "Git user email")
-    GIT_REMOTE=$(_rp "remote"    "Remote URL (e.g. git@github.com:you/nixos-config)")
+    GIT_REMOTE=$(_rp "remote"    "Remote URL (e.g. git@github.com:you/ft-testing)")
     git init
     git config user.name  "$GIT_NAME"
     git config user.email "$GIT_EMAIL"
@@ -85,7 +85,7 @@ add-machine name ip user="example":
   ft.boot.limine.enable    = true;
   ft.desktop.cosmic.enable = true;
   ft.cli.enable            = true;
-  ft.repoPath              = "/home/${USER}/nixos-config";
+  ft.repoPath              = "/home/${USER}/ft-testing";
 
   ft.security.sops = {
     enable = true;
