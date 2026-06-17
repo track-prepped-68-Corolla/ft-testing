@@ -39,6 +39,13 @@ in
       machine.succeed("test -e /home/admin/.nix-profile/bin/conform")
       machine.succeed("test -e /home/admin/.nix-profile/bin/convco")
       machine.succeed("test -e /home/admin/.nix-profile/bin/lefthook")
+      # The commit-msg hook must actually enforce conventional commit format,
+      # not just exist: reject a non-conventional message and accept a valid one.
+      machine.succeed("su admin -c 'mkdir -p /tmp/repo && cd /tmp/repo && git init -q'")
+      machine.succeed("su admin -c \"echo 'not a conventional commit' > /tmp/bad-msg\"")
+      machine.fail("su admin -c 'cd /tmp/repo && /home/admin/.config/git/hooks/commit-msg /tmp/bad-msg'")
+      machine.succeed("su admin -c \"echo 'fix: a valid conventional commit message' > /tmp/good-msg\"")
+      machine.succeed("su admin -c 'cd /tmp/repo && /home/admin/.config/git/hooks/commit-msg /tmp/good-msg'")
     '';
   };
 }
