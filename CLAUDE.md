@@ -18,7 +18,7 @@ It serves three roles:
    for framework modules, merged into `packages.x86_64-linux` so they stay out
    of `nix flake check`.
 
-`ft-testing` shares its template content (machines/users/scripts) with the
+`ft-testing` shares its template content (machines/users) with the
 `ft-template` repo; `ft-template` is `ft-testing` minus `tests/` and
 `machines/strix-vm`. Keep design changes to the shared content in sync by
 convention.
@@ -47,7 +47,11 @@ modules/
                           # NOTE: there is intentionally NO modules/nixos — every
                           # NixOS module lives in fast-track-nix.
 tests/vm/                 # VM smoke test suite (see below)
-scripts/                  # ft CLI just-recipes (sys, bootstrap, mullet, ...)
+scripts/                  # CI helper scripts only (check-gpu.sh, check-vendorHw.sh)
+                          # NOTE: the `ft` CLI just-recipes (ft.just, sys.just,
+                          # bootstrap.just, ...) live in fast-track-nix's
+                          # scripts/ — they are bundled into the framework and
+                          # executed via the `ft.cli` wrapper, not duplicated here.
 ```
 
 There is **no `modules/nixos/`**: the four consumer-suitable modules (mullet,

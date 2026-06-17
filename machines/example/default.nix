@@ -50,7 +50,7 @@
   # Universal GPU module — autodetects the vendor from facter.json.
   ft.gpu.enable = true;
 
-  # The `ft` CLI helper. Requires ft.repoPath to locate scripts/ at runtime.
+  # The `ft` CLI helper. Requires ft.repoPath as the --working-directory target.
   ft.cli.enable = true;
   ft.repoPath = "/home/example/ft-testing";
 
