@@ -62,6 +62,15 @@ jobs:
             --apply 'builtins.mapAttrs (_: m: m.config.system.build.toplevel.drvPath)' \
             2>&1 | tee /tmp/ci-eval.log; exit ${PIPESTATUS[0]}
 
+      # Same pattern for homeConfigurations, including every profile
+      # combination produced by the generator's profile combinator.
+      - name: Evaluate Home Manager configurations
+        shell: bash
+        run: |
+          nix eval --json '.#homeConfigurations' \
+            --apply 'builtins.mapAttrs (_: m: m.activationPackage.drvPath)' \
+            2>&1 | tee /tmp/ci-eval-home.log; exit ${PIPESTATUS[0]}
+
       # Assert the downstream option values ft.vendorHw / ft.gpu must derive
       # from each fixtures/vendorHw report (eval-only, no builds).
       - name: vendorHw detection assertions
@@ -72,6 +81,12 @@ jobs:
       - name: gpu detection assertions
         shell: bash
         run: ./scripts/check-gpu.sh 2>&1 | tee /tmp/ci-gpu.log; exit ${PIPESTATUS[0]}
+
+      # Assert the generator's profile combinator produces every non-empty
+      # combination of users/example/profiles/* with packages merged correctly.
+      - name: Home Manager profile combination assertions
+        shell: bash
+        run: ./scripts/check-home-profiles.sh 2>&1 | tee /tmp/ci-home-profiles.log; exit ${PIPESTATUS[0]}
 
       - name: Secret scan
         uses: trufflesecurity/trufflehog@main
@@ -110,8 +125,10 @@ jobs:
               'Auto-format (treefmt)': '/tmp/ci-fmt.log',
               'nix flake check': '/tmp/ci-check.log',
               'Evaluate NixOS configurations': '/tmp/ci-eval.log',
+              'Evaluate Home Manager configurations': '/tmp/ci-eval-home.log',
               'vendorHw detection assertions': '/tmp/ci-vendorhw.log',
               'gpu detection assertions': '/tmp/ci-gpu.log',
+              'Home Manager profile combination assertions': '/tmp/ci-home-profiles.log',
             };
 
             const MAX_LOG_CHARS = 6000;

@@ -41,6 +41,10 @@ machines/
     default.nix
 users/
   example/                # template user (generic dotfiles, shared with guest)
+    profiles/             # example profiles (gaming, development) — exercises
+                          # the generator's profile combinator; produces
+                          # example+gaming@<arch>, example+development@<arch>,
+                          # example+development+gaming@<arch>, etc.
   guest/                  # default guest user
 modules/
   home/default.nix        # empty consumer HM hub (kept so users/*/imports resolve)
