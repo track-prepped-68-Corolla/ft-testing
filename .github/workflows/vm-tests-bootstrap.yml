@@ -1,10 +1,10 @@
-name: VM Smoke Tests
+name: VM Bootstrap Workflow Test
 
 on:
   workflow_dispatch:
 
 jobs:
-  vm-smoke:
+  vm-bootstrap-workflow:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,22 +27,8 @@ jobs:
       - name: Update ft-framework input
         run: nix flake update ft-framework
 
-      - name: Run VM smoke tests
+      - name: Run bootstrap workflow VM test
         run: |
           nix build -L --no-link \
             --option system-features "nixos-test kvm benchmark big-parallel" \
-            .#vm-core-boot \
-            .#vm-tailscale-load \
-            .#vm-podman-rootless-load \
-            .#vm-printing-load \
-            .#vm-keepass-load \
-            .#vm-nix-index-load \
-            .#vm-virt-load \
-            .#vm-nfs-framework-load \
-            .#vm-cli-load \
-            .#vm-mullet-load \
-            .#vm-facter-load \
-            .#vm-vendor-hw-asus \
-            .#vm-rclone-load \
-            .#vm-wine-load \
-            .#vm-git-workflow-load
+            .#vm-bootstrap-workflow

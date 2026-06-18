@@ -31,9 +31,12 @@
   };
 
   # --- DISK (btrfs: @ @home @nix @snapshots; /dev/vda suits QEMU VMs) ---
+  # confirmDevice must restate device — a safety check so picking the wrong
+  # disk fails evaluation instead of silently wiping it.
   ft.diskBtrfs = {
     enable = true;
     device = "/dev/vda";
+    confirmDevice = "/dev/vda";
   };
 
   # --- BOOT (systemd-boot keeps the template QEMU/UEFI-friendly) ---
