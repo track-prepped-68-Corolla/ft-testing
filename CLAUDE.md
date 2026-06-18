@@ -88,7 +88,10 @@ nix build -L --no-link \
   .#vm-core-boot
 ```
 
-**Trigger all:** `VM Smoke Tests` workflow → `workflow_dispatch`.
+**Trigger all module smoke tests:** `VM Smoke Tests` workflow → `workflow_dispatch`.
+Neither this workflow nor the bootstrap workflow test run automatically on
+pull requests — both are manual-dispatch only, since VM tests are slow and
+KVM-bound.
 
 `tests/vm/lib.nix` is a thin wrapper around the framework's VM test helpers:
 
@@ -104,6 +107,12 @@ Every test must assert at least one **runtime effect** (service active, binary
 on PATH, file present), not merely that the config evaluates. After adding a
 test file, register it in `tests/vm/default.nix` and
 `.github/workflows/vm-tests.yml`.
+
+`vm-bootstrap-workflow` (the full `bootstrap.just` end-to-end test) is built
+and triggered separately, in its own `VM Bootstrap Workflow Test` workflow
+(`.github/workflows/vm-tests-bootstrap.yml`) — it is heavier than the other
+module smoke tests and exercises the full provisioning flow rather than a
+single module, so it is kept out of the main `vm-smoke` job.
 
 ---
 
