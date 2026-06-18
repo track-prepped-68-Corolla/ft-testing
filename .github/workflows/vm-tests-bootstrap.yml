@@ -2,6 +2,10 @@ name: VM Bootstrap Workflow Test
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - testing
+      - main
 
 jobs:
   vm-bootstrap-workflow:
