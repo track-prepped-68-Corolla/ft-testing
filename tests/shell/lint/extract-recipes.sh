@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Extract each bash recipe body from a justfile into a standalone .sh file so it
 # can be linted with shellcheck. just's {{...}} interpolations are replaced with
-# a placeholder token (a valid shell word), and a `# shellcheck disable=SC1091`
-# line is injected after the shebang so sourced lib/ files don't trip "not
-# following" errors.
+# a placeholder shell *variable* (${JUST_INTERP}) — not a literal — so shellcheck
+# treats them as the dynamic values they are at runtime, avoiding false literal-
+# string findings (e.g. SC2157 on `[ -n "{{ARGS}}" ]`). A `# shellcheck
+# disable=SC1091` line is injected after the shebang so sourced lib/ files don't
+# trip "not following" errors.
 #
 # Usage: extract-recipes.sh <justfile> <output-dir>
 set -euo pipefail
@@ -43,9 +45,10 @@ awk -v outdir="$OUTDIR" -v prefix="$BASENAME" '
   END { flush() }
 ' "$JUSTFILE"
 
-# Replace {{ ... }} interpolations with a placeholder shell word so shellcheck
-# parses the bodies. Done as a post-pass to keep the awk above readable.
+# Replace {{ ... }} interpolations with a placeholder shell variable so
+# shellcheck parses the bodies and treats them as dynamic (not literal) values.
+# Done as a post-pass to keep the awk above readable.
 for f in "$OUTDIR/${BASENAME}__"*.sh; do
   [ -e "$f" ] || continue
-  sed -i -E 's/\{\{[^}]*\}\}/JUST_INTERP/g' "$f"
+  sed -i -E 's/\{\{[^}]*\}\}/${JUST_INTERP}/g' "$f"
 done
