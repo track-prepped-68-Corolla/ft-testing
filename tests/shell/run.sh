@@ -13,8 +13,8 @@ what="${1:-all}"
 # Invoke sub-scripts via `bash` rather than relying on their shebang, so the
 # suite also works where /usr/bin/env is absent.
 run_lint() { bash "${HERE}/lint/shellcheck-scripts.sh"; }
-run_unit() { echo ":: bats unit ::"; bats "${HERE}/unit"; }
-run_integration() { echo ":: bats integration ::"; bats "${HERE}/integration"; }
+run_unit() { echo ":: bats unit ::"; bats --print-output-on-failure "${HERE}/unit"; }
+run_integration() { echo ":: bats integration ::"; bats --print-output-on-failure "${HERE}/integration"; }
 
 case "$what" in
   lint)        run_lint ;;
