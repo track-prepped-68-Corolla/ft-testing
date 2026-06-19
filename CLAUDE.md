@@ -135,8 +135,11 @@ framework modules.
 
 Exposed as `packages.x86_64-linux.shell-tests` (kept out of `nix flake check`,
 like the VM tests) and run via the `Shell Tests` `workflow_dispatch` workflow or
-`nix build -L .#shell-tests`. Because it exercises the framework's `testing`
-branch, it only passes once the corresponding framework change has landed there.
+`nix run .#shell-tests`. It runs via `nix run`, not `nix build`: the framework
+recipes/mocks execute through `#!/usr/bin/env bash` shebangs, which the build
+sandbox can't satisfy (no `/usr/bin/env`), so it runs on the host instead.
+Because it exercises the framework's `testing` branch, it only passes once the
+corresponding framework change has landed there.
 
 ---
 

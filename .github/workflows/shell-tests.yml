@@ -25,5 +25,8 @@ jobs:
       - name: Update ft-framework input
         run: nix flake update ft-framework
 
+      # Run via `nix run` (not `nix build`): the framework recipes, mocks, and
+      # helpers execute through their #!/usr/bin/env bash shebangs, which the
+      # Nix build sandbox can't satisfy (no /usr/bin/env). The runner can.
       - name: Run shell test suite (shellcheck + bats)
-        run: nix build -L .#shell-tests
+        run: nix run .#shell-tests

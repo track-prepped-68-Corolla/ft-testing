@@ -25,15 +25,21 @@ tests/shell/
 ## Running
 
 Everything runs in CI via the **Shell Tests** `workflow_dispatch` job
-(`.github/workflows/shell-tests.yml`), which builds the `shell-tests` package
+(`.github/workflows/shell-tests.yml`), which runs the `shell-tests` package
 (it sets `FT_SCRIPTS_DIR` to the framework input's `scripts/`):
 
 ```bash
-nix build -L .#shell-tests
+nix run .#shell-tests            # all
+nix run .#shell-tests -- unit    # unit | integration | lint
 ```
 
-Locally, set `FT_SCRIPTS_DIR` to a fast-track-nix checkout (or the input's store
-path); `bats`, `shellcheck`, `just`, and `jq` need to be on PATH:
+> It runs via `nix run`, not `nix build`: the framework recipes, the mocks, and
+> these helpers all execute through their `#!/usr/bin/env bash` shebangs, which
+> the Nix build sandbox can't satisfy (no `/usr/bin/env`). `nix run` executes on
+> the host, where it can, while the toolchain still comes from the derivation.
+
+Locally without `nix run`, set `FT_SCRIPTS_DIR` to a fast-track-nix checkout (or
+the input's store path); `bats`, `shellcheck`, `just`, and `jq` need to be on PATH:
 
 ```bash
 FT_SCRIPTS_DIR=../fast-track-nix/scripts tests/shell/run.sh              # all

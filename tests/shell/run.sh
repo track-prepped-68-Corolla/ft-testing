@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Entry point for the ft shell test suite: shellcheck + bats unit + bats
-# integration. Run locally inside `nix develop` (which provides bats, shellcheck,
-# just, jq) or via the shell-tests Nix package / the workflow_dispatch CI job.
+# integration. Run via `nix run .#shell-tests` (CI / dev), or directly with
+# bats/shellcheck/just/jq on PATH and FT_SCRIPTS_DIR set to the framework
+# scripts/ directory.
 #
 # Usage: tests/shell/run.sh [unit|integration|lint]   (default: all)
 set -euo pipefail
@@ -9,7 +10,9 @@ set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 what="${1:-all}"
 
-run_lint() { "${HERE}/lint/shellcheck-scripts.sh"; }
+# Invoke sub-scripts via `bash` rather than relying on their shebang, so the
+# suite also works where /usr/bin/env is absent.
+run_lint() { bash "${HERE}/lint/shellcheck-scripts.sh"; }
 run_unit() { echo ":: bats unit ::"; bats "${HERE}/unit"; }
 run_integration() { echo ":: bats integration ::"; bats "${HERE}/integration"; }
 

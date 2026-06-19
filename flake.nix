@@ -40,7 +40,7 @@
       #   nix build -L --option system-features "nixos-test kvm benchmark big-parallel" \
       #     .#vm-core-boot
       # Shell-recipe suite (shell-tests), run via the shell-tests workflow or:
-      #   nix build -L .#shell-tests
+      #   nix run .#shell-tests   (runs on the host, not the sandbox — see tests/shell)
       packages.x86_64-linux =
         (import ./tests/vm { inherit inputs nixpkgs; })
         // (import ./tests/shell/package.nix { inherit inputs nixpkgs; });
