@@ -1,0 +1,29 @@
+name: Shell Tests
+
+# Manual-dispatch only, like the VM tests: the ft shell-recipe suite
+# (shellcheck + bats unit and integration) runs against the framework's
+# scripts/ via the ft-framework input.
+on:
+  workflow_dispatch:
+
+jobs:
+  shell-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v14
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      # Pick up the latest framework commit from the tracked branch.
+      - name: Update ft-framework input
+        run: nix flake update ft-framework
+
+      - name: Run shell test suite (shellcheck + bats)
+        run: nix build -L .#shell-tests

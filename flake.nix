@@ -35,10 +35,14 @@
   outputs =
     inputs@{ ft-framework, nixpkgs, ... }:
     nixpkgs.lib.recursiveUpdate (ft-framework.lib.mkFlake inputs) {
-      # VM smoke tests — exposed as packages so they stay out of nix flake check.
-      # Run manually via the vm-tests workflow or:
+      # Test suites — exposed as packages so they stay out of nix flake check.
+      # VM smoke tests (vm-*), run via the vm-tests workflow or:
       #   nix build -L --option system-features "nixos-test kvm benchmark big-parallel" \
       #     .#vm-core-boot
-      packages.x86_64-linux = import ./tests/vm { inherit inputs nixpkgs; };
+      # Shell-recipe suite (shell-tests), run via the shell-tests workflow or:
+      #   nix build -L .#shell-tests
+      packages.x86_64-linux =
+        (import ./tests/vm { inherit inputs nixpkgs; })
+        // (import ./tests/shell/package.nix { inherit inputs nixpkgs; });
     };
 }
