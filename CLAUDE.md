@@ -51,6 +51,9 @@ modules/
                           # NOTE: there is intentionally NO modules/nixos — every
                           # NixOS module lives in fast-track-nix.
 tests/vm/                 # VM smoke test suite (see below)
+tests/shell/              # shell-recipe test suite (shellcheck + bats) for the
+                          # framework's scripts/ just-recipes — reached via the
+                          # ft-framework input (FT_SCRIPTS_DIR). See below.
 scripts/                  # CI helper scripts only (check-gpu.sh, check-vendorHw.sh)
                           # NOTE: the `ft` CLI just-recipes (ft.just, sys.just,
                           # bootstrap.just, ...) live in fast-track-nix's
@@ -113,6 +116,27 @@ and triggered separately, in its own `VM Bootstrap Workflow Test` workflow
 (`.github/workflows/vm-tests-bootstrap.yml`) — it is heavier than the other
 module smoke tests and exercises the full provisioning flow rather than a
 single module, so it is kept out of the main `vm-smoke` job.
+
+---
+
+## Shell Tests
+
+`tests/shell/` holds the test suite for the framework's bundled `ft` CLI
+just-recipes (`fast-track-nix/scripts/`). The recipes and their pure-logic
+helpers (`scripts/lib/`) live in the framework; this suite reaches them through
+the `ft-framework` input via `FT_SCRIPTS_DIR`, exactly as the VM tests reach
+framework modules.
+
+- `tests/shell/unit/` — bats tests for each `scripts/lib/*.sh` helper.
+- `tests/shell/integration/` — drive real `just` recipes and `select-disk.sh`
+  with `nix`/`ssh`/`sops`/`lsblk`/`findmnt` mocked; assert concrete effects.
+- `tests/shell/lint/` — shellcheck over the libs + `select-disk.sh` and every
+  extracted bash recipe body.
+
+Exposed as `packages.x86_64-linux.shell-tests` (kept out of `nix flake check`,
+like the VM tests) and run via the `Shell Tests` `workflow_dispatch` workflow or
+`nix build -L .#shell-tests`. Because it exercises the framework's `testing`
+branch, it only passes once the corresponding framework change has landed there.
 
 ---
 
