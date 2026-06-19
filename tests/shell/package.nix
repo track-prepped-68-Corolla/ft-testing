@@ -1,13 +1,20 @@
 # =============================================================================
-# Shell Test Suite — Package
+# Shell Test Suite — Runnable
 # =============================================================================
 #
-# Builds and runs the ft shell-recipe suite (shellcheck + bats unit and
-# integration) against the framework's scripts/, reached through the
-# ft-framework input. Exposed as packages.x86_64-linux.shell-tests so it stays
-# out of `nix flake check`, like the VM smoke tests, and is run on demand via
-# the Shell Tests workflow_dispatch job or:
-#   nix build -L .#shell-tests
+# Exposes packages.x86_64-linux.shell-tests as a runnable wrapper (not a
+# build-time check) that executes the ft shell-recipe suite — shellcheck + bats
+# unit and integration — against the framework's scripts/, reached through the
+# ft-framework input.
+#
+# It must run OUTSIDE the Nix build sandbox: the framework recipes, the test
+# mocks, and the helper scripts are all executed via their `#!/usr/bin/env bash`
+# shebangs, and the sandbox has no /usr/bin/env. Running it as a `nix run`
+# program (on the CI runner / a dev machine, where /usr/bin/env exists) avoids
+# that, while the toolchain still comes hermetically from this derivation.
+#
+#   nix run .#shell-tests            # all
+#   nix run .#shell-tests -- unit    # a subset (unit | integration | lint)
 # =============================================================================
 { inputs, nixpkgs }:
 
@@ -16,10 +23,10 @@ let
   fw = inputs.ft-framework;
 in
 {
-  shell-tests = pkgs.stdenvNoCC.mkDerivation {
-    name = "ft-shell-tests";
-    src = ./.;
-    nativeBuildInputs = with pkgs; [
+  shell-tests = pkgs.writeShellApplication {
+    name = "shell-tests";
+    runtimeInputs = with pkgs; [
+      bash
       bats
       shellcheck
       just
@@ -28,21 +35,13 @@ in
       gnused
       gnugrep
       gawk
+      findutils
       coreutils
     ];
-    dontConfigure = true;
-    dontBuild = true;
-    doCheck = true;
-    checkPhase = ''
-      runHook preCheck
-      export HOME="$TMPDIR"
-      export GIT_CONFIG_NOSYSTEM=1
-      export GIT_CONFIG_GLOBAL=/dev/null
+    text = ''
       # The recipes/libs under test live in the framework input's scripts/.
       export FT_SCRIPTS_DIR="${fw}/scripts"
-      bash ./run.sh
-      runHook postCheck
+      exec bash "${./.}/run.sh" "$@"
     '';
-    installPhase = "touch $out";
   };
 }
