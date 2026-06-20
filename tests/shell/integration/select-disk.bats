@@ -28,8 +28,11 @@ EOF
 }
 
 @test "rewrites the chosen device and prints it on stdout" {
-  # menu (boot disk vda excluded): 1) sda  2) sdb  -> pick 2, confirm
-  run bash "${SCRIPTS_DIR}/select-disk.sh" m.nix 2>/dev/null <<EOF
+  # menu (boot disk vda excluded): 1) sda  2) sdb  -> pick 2, confirm.
+  # --separate-stderr: select-disk's menu/logs go to stderr; only the resolved
+  # device is on stdout, which is select-disk's contract for callers. (Plain
+  # `run` merges stderr into $output, so we must split them to assert on stdout.)
+  run --separate-stderr bash "${SCRIPTS_DIR}/select-disk.sh" m.nix <<EOF
 2
 y
 EOF
