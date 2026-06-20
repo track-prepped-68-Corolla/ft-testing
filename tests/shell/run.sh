@@ -5,7 +5,10 @@
 # scripts/ directory.
 #
 # Usage: tests/shell/run.sh [unit|integration|lint]   (default: all)
-set -euo pipefail
+#
+# `all` runs every stage to completion and aggregates the result, so one run
+# surfaces every failure rather than stopping at the first.
+set -uo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 what="${1:-all}"
@@ -16,12 +19,26 @@ run_lint() { bash "${HERE}/lint/shellcheck-scripts.sh"; }
 run_unit() { echo ":: bats unit ::"; bats --print-output-on-failure "${HERE}/unit"; }
 run_integration() { echo ":: bats integration ::"; bats --print-output-on-failure "${HERE}/integration"; }
 
+run_all() {
+  local rc=0
+  run_lint        || rc=1
+  run_unit        || rc=1
+  run_integration || rc=1
+  return "$rc"
+}
+
 case "$what" in
   lint)        run_lint ;;
   unit)        run_unit ;;
   integration) run_integration ;;
-  all)         run_lint; run_unit; run_integration ;;
+  all)         run_all ;;
   *) echo "usage: run.sh [unit|integration|lint]" >&2; exit 2 ;;
 esac
+rc=$?
 
-echo ":: shell test suite passed ::"
+if [ "$rc" -eq 0 ]; then
+  echo ":: shell test suite passed ::"
+else
+  echo ":: shell test suite FAILED (see failures above) ::" >&2
+fi
+exit "$rc"
