@@ -51,8 +51,11 @@ in
       machine.succeed("printf 'git@example.com:test/test-repo' > /tmp/repo/var/git/remote")
 
       # git-init: repoPath must record the @src convention, not the transient
-      # bootstrap $PWD.
-      machine.succeed("ft git-init")
+      # bootstrap $PWD. Redirect stdin from /dev/null: the nixosTest backdoor
+      # runs commands with a tty, so git-init's `[ -t 0 ]`-guarded identity
+      # prompt would otherwise block here; non-interactive stdin makes it take
+      # the recommended gitignore default.
+      machine.succeed("ft git-init < /dev/null")
       machine.succeed("test -d /tmp/repo/.git")
       machine.succeed("grep -qx '/src/repo' /tmp/repo/var/local/repoPath")
 
