@@ -45,7 +45,7 @@
       # makeHive at eval time, without building the system closure (already
       # covered by the nixosConfigurations.example toplevel eval). The colmena
       # layer is otherwise VM-test exempt (needs real inter-host SSH).
-      exampleTags = base.colmenaHive.deploymentConfig.example.config.deployment.tags;
+      exampleTags = base.colmenaHive.nodes.example.config.deployment.tags;
     in
     nixpkgs.lib.recursiveUpdate base {
       # Test suites — exposed as packages so they stay out of nix flake check.
