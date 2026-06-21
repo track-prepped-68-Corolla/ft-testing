@@ -45,4 +45,5 @@ jobs:
             .#vm-vendor-hw-asus \
             .#vm-rclone-load \
             .#vm-wine-load \
-            .#vm-git-workflow-load
+            .#vm-git-workflow-load \
+            .#vm-gitops-load
