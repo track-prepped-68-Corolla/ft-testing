@@ -54,3 +54,24 @@ setup() {
   run is_json_object a.json
   [ "$status" -ne 0 ]
 }
+
+@test "nixos_anywhere uses an installed binary when present" {
+  setup_mockbin
+  mock nixos-anywhere 'printf "installed %s\n" "$*"'
+  mock nix 'printf "nix %s\n" "$*"'
+  run nixos_anywhere --flake .#x --extra-files /tmp/y root@host
+  [ "$status" -eq 0 ]
+  [[ "$output" == installed* ]]
+  [[ "$output" == *"--flake .#x"* ]]
+}
+
+@test "nixos_anywhere falls back to nix run when not installed" {
+  setup_mockbin
+  command -v nixos-anywhere >/dev/null 2>&1 && skip "nixos-anywhere present in test env"
+  mock nix 'printf "nix %s\n" "$*"'
+  run nixos_anywhere --flake .#x root@host
+  [ "$status" -eq 0 ]
+  [[ "$output" == "nix run"* ]]
+  [[ "$output" == *"github:nix-community/nixos-anywhere"* ]]
+  [[ "$output" == *"--flake .#x"* ]]
+}
