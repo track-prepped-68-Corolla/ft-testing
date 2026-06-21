@@ -57,5 +57,13 @@
   ft.cli.enable = true;
   ft.repoPath = "/home/example/ft-testing";
 
+  # Fleet deployment: opt this machine into the colmenaHive output so
+  # `ft fleet apply` can build and activate it remotely. targetHost is left
+  # unset, so colmena addresses it by node name ("example").
+  ft.deploy = {
+    enable = true;
+    tags = [ "example" ];
+  };
+
   ft.core.stateVersion = "25.05";
 }
