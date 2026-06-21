@@ -49,13 +49,18 @@ EOF
   head -c1 "$REPO/machines/strix/var/facter.json" | grep -q '{'
 }
 
-@test "generate-facts writes and commits valid JSON" {
+@test "generate-facts writes and commits valid JSON (and enables flakes on the remote)" {
   init_git_repo "$REPO"
-  mock ssh 'printf "{\"system\":\"x86_64-linux\"}\n"'
+  mock ssh 'printf "%s\n" "$*" >> "$BATS_TEST_TMPDIR/ssh.args"; printf "{\"system\":\"x86_64-linux\"}\n"'
   run ft_run "$REPO" generate-facts strix 1.2.3.4
   [ "$status" -eq 0 ]
   head -c1 "$REPO/machines/strix/var/facter.json" | grep -q '{'
   git -C "$REPO" ls-files machines/strix/var/facter.json | grep -q .
+  # Regression guard: the remote nixos-facter run must enable nix-command/flakes,
+  # which the stock NixOS live ISO disables by default — otherwise the scan
+  # aborts before facter runs (the failure we hit provisioning lyra).
+  grep -q -- '--extra-experimental-features' "$BATS_TEST_TMPDIR/ssh.args"
+  grep -q 'nix-command flakes' "$BATS_TEST_TMPDIR/ssh.args"
 }
 
 @test "generate-facts refuses to write non-JSON output" {
