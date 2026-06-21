@@ -34,7 +34,20 @@
 
   outputs =
     inputs@{ ft-framework, nixpkgs, ... }:
-    nixpkgs.lib.recursiveUpdate (ft-framework.lib.mkFlake inputs) {
+    let
+      base = ft-framework.lib.mkFlake inputs;
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+      # colmena hive eval check: machines/example opts into ft.deploy, so the
+      # example node must appear in the colmenaHive output and the framework's
+      # bridge module must map ft.deploy.tags -> deployment.tags. Forcing the
+      # node's deployment config exercises membership filtering + the bridge +
+      # makeHive at eval time, without building the system closure (already
+      # covered by the nixosConfigurations.example toplevel eval). The colmena
+      # layer is otherwise VM-test exempt (needs real inter-host SSH).
+      exampleTags = base.colmenaHive.nodes.example.config.deployment.tags;
+    in
+    nixpkgs.lib.recursiveUpdate base {
       # Test suites — exposed as packages so they stay out of nix flake check.
       # VM smoke tests (vm-*), run via the vm-tests workflow or:
       #   nix build -L --option system-features "nixos-test kvm benchmark big-parallel" \
@@ -44,5 +57,10 @@
       packages.x86_64-linux =
         (import ./tests/vm { inherit inputs nixpkgs; })
         // (import ./tests/shell/package.nix { inherit inputs nixpkgs; });
+
+      checks.x86_64-linux.colmena-hive =
+        assert nixpkgs.lib.assertMsg (exampleTags == [ "example" ])
+          "colmenaHive bridge did not map ft.deploy.tags onto deployment.tags for the example node (got ${builtins.toJSON exampleTags})";
+        pkgs.runCommand "colmena-hive-eval" { } "touch $out";
     };
 }
