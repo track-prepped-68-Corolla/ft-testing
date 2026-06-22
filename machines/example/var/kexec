@@ -1,0 +1,7 @@
+# Marker file (presence-only; contents ignored).
+#
+# Opts machines/example into a per-machine kexec installer image. The framework
+# generator (flake-parts/kexec.nix) sees this file and emits
+# packages.x86_64-linux.example-kexec — the kexec self-install image with the
+# example system baked in. CI evaluates that package (forcing its derivation),
+# which exercises the whole kexec.nix + auto-install + nixos-images interface.
