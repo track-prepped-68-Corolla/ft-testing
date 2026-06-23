@@ -75,3 +75,39 @@ setup() {
   [[ "$output" == *"github:nix-community/nixos-anywhere"* ]]
   [[ "$output" == *"--flake .#x"* ]]
 }
+
+@test "git_push_branch pushes the current branch" {
+  setup_mockbin
+  mock git 'case "$1" in rev-parse) echo work ;; push) printf "push %s\n" "$*"; exit 0 ;; esac'
+  run git_push_branch
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"push -u origin work"* ]]
+}
+
+@test "git_push_branch retries on failure then succeeds" {
+  setup_mockbin
+  mock sleep ':'
+  mock git '
+    case "$1" in
+      rev-parse) echo work ;;
+      push)
+        n=$(cat "$BATS_TEST_TMPDIR/n" 2>/dev/null || echo 0); n=$((n + 1))
+        echo "$n" > "$BATS_TEST_TMPDIR/n"
+        [ "$n" -ge 3 ]
+        ;;
+    esac'
+  run git_push_branch
+  [ "$status" -eq 0 ]
+  [ "$(cat "$BATS_TEST_TMPDIR/n")" -eq 3 ]
+  [[ "$output" == *"retrying"* ]]
+}
+
+@test "git_push_branch warns but does not fail when push never succeeds" {
+  setup_mockbin
+  mock sleep ':'
+  mock git 'case "$1" in rev-parse) echo work ;; push) exit 1 ;; esac'
+  run git_push_branch
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"WARN"* ]]
+  [[ "$output" == *"ft capture"* ]]
+}
