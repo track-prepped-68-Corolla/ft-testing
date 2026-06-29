@@ -54,9 +54,12 @@
       #     .#vm-core-boot
       # Shell-recipe suite (shell-tests), run via the shell-tests workflow or:
       #   nix run .#shell-tests   (runs on the host, not the sandbox — see tests/shell)
+      # ft_py pytest suite (python-tests), run via the python-tests workflow or:
+      #   nix run .#python-tests  (against the framework's ft-py-test-env venv)
       packages.x86_64-linux =
         (import ./tests/vm { inherit inputs nixpkgs; })
-        // (import ./tests/shell/package.nix { inherit inputs nixpkgs; });
+        // (import ./tests/shell/package.nix { inherit inputs nixpkgs; })
+        // (import ./tests/python/package.nix { inherit inputs nixpkgs; });
 
       checks.x86_64-linux.colmena-hive =
         assert nixpkgs.lib.assertMsg (exampleTags == [ "example" ])

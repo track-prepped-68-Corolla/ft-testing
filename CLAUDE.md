@@ -54,6 +54,9 @@ tests/vm/                 # VM smoke test suite (see below)
 tests/shell/              # shell-recipe test suite (shellcheck + bats) for the
                           # framework's scripts/ just-recipes — reached via the
                           # ft-framework input (FT_SCRIPTS_DIR). See below.
+tests/python/             # pytest suite for the framework's ft_py CLI —
+                          # reached via the ft-framework input's
+                          # ft-py-test-env venv. See below.
 scripts/                  # CI helper scripts only (check-gpu.sh, check-vendorHw.sh)
                           # NOTE: the `ft` CLI just-recipes (ft.just, sys.just,
                           # bootstrap.just, ...) live in fast-track-nix's
@@ -140,6 +143,33 @@ recipes/mocks execute through `#!/usr/bin/env bash` shebangs, which the build
 sandbox can't satisfy (no `/usr/bin/env`), so it runs on the host instead.
 Because it exercises the framework's `testing` branch, it only passes once the
 corresponding framework change has landed there.
+
+---
+
+## Python Tests
+
+`tests/python/` holds the pytest suite for the framework's `ft_py` CLI
+(`fast-track-nix/scripts/ft_py`). The package logic and its `uv2nix`-built
+venvs live in the framework; this suite reaches them through the
+`ft-framework` input via `packages.x86_64-linux.ft-py-test-env` — a
+non-editable venv with `ft_py` and its `dev` dependency group (pytest,
+pytest-asyncio) already installed — exactly as the shell-test suite reaches
+`scripts/` via `FT_SCRIPTS_DIR`.
+
+- `conftest.py` — shared fixtures (`FakeStreamedCommand`, `fake_run_capture`,
+  `fake_run_piped`) that stand in for `ft_py.proc`'s subprocess plumbing.
+- `test_proc.py` — integration tests against real subprocesses.
+- `test_ops_sys.py`, `test_ops_mullet.py` — control-flow tests for the two
+  ops modules, with subprocess calls faked.
+- `test_cli.py` — Typer CLI layer tests, with the ops layer faked.
+- `pytest.ini` — `asyncio_mode = auto`; lives here because `ft_py`'s own
+  `pyproject.toml` no longer carries test config once the tests moved out.
+
+Exposed as `packages.x86_64-linux.python-tests` (kept out of `nix flake
+check`, like the VM and shell tests) and run via the `Python Tests`
+`workflow_dispatch` workflow or `nix run .#python-tests`. Because it exercises
+the framework's `testing` branch, it only passes once the corresponding
+framework change has landed there.
 
 ---
 
