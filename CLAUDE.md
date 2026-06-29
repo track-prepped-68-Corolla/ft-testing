@@ -57,6 +57,9 @@ tests/shell/              # shell-recipe test suite (shellcheck + bats) for the
 tests/python/             # pytest suite for the framework's ft_py CLI —
                           # reached via the ft-framework input's
                           # ft-py-test-env venv. See below.
+tests/rust/               # cargo + bats suite for the framework's experimental
+                          # scripts/mullet-rs crate — reached via the
+                          # ft-framework input. See below.
 scripts/                  # CI helper scripts only (check-gpu.sh, check-vendorHw.sh)
                           # NOTE: the `ft` CLI just-recipes (ft.just, sys.just,
                           # bootstrap.just, ...) live in fast-track-nix's
@@ -170,6 +173,33 @@ check`, like the VM and shell tests) and run via the `Python Tests`
 `workflow_dispatch` workflow or `nix run .#python-tests`. Because it exercises
 the framework's `testing` branch, it only passes once the corresponding
 framework change has landed there.
+
+---
+
+## Rust Tests
+
+`tests/rust/` holds the test suite for the framework's experimental
+`scripts/mullet-rs` crate — a standalone Rust replica of `mullet.just`, not
+wired into the `ft` CLI. The crate and its already-built binary
+(`packages.mullet`) live in the framework; this suite reaches them through
+the `ft-framework` input via `FT_MULLET_RS_DIR` and `FT_MULLET_BIN`, exactly
+as the shell-test suite reaches `scripts/` via `FT_SCRIPTS_DIR`.
+
+- `tests/rust/run.sh` — runs `cargo test` against the vendored crate source
+  (unit tests), then the bats integration suite, same `unit|integration|all`
+  shape as `tests/shell/run.sh`.
+- `tests/rust/integration/mullet.bats` — drives the built `mullet` binary's
+  `search`/`add`/`rm`/`lst`/`haircut` subcommands with `nix`/`nix-locate`
+  mocked; asserts concrete file effects, mirroring
+  `tests/shell/integration/`'s mocking style.
+
+Exposed as `packages.x86_64-linux.rust-tests` (kept out of `nix flake check`,
+like the other suites) and run via the `Rust Tests` `workflow_dispatch`
+workflow or `nix run .#rust-tests`. It runs via `nix run`, not `nix build`:
+`cargo test` needs real network access to fetch crate dependencies, which the
+sandboxed builder lacks. Because it exercises the framework's `testing`
+branch, it only passes once the corresponding framework change has landed
+there.
 
 ---
 
