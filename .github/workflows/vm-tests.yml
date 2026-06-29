@@ -47,4 +47,5 @@ jobs:
             .#vm-wine-load \
             .#vm-git-workflow-load \
             .#vm-gitops-load \
-            .#vm-flatpak-load
+            .#vm-flatpak-load \
+            .#vm-steam-config-load
