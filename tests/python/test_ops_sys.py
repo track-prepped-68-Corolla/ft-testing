@@ -128,7 +128,7 @@ async def test_test_happy_path_streams_every_phase(
     assert ":: Test complete. Reboot to revert. ::" in lines
 
 
-async def test_test_raises_command_failed_but_still_prints_completion_line(
+async def test_test_raises_command_failed_and_skips_completion_line(
     tmp_path, fake_streamed_command, fake_run_piped, monkeypatch, no_missing_requirements
 ):
     monkeypatch.setattr(
@@ -142,7 +142,7 @@ async def test_test_raises_command_failed_but_still_prints_completion_line(
     with pytest.raises(CommandFailedError):
         async for line in sys_ops.test_(tmp_path):
             collected.append(line.text)
-    assert ":: Test complete. Reboot to revert. ::" in collected
+    assert ":: Test complete. Reboot to revert. ::" not in collected
 
 
 # --- switch_preview() ---
