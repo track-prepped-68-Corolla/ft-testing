@@ -38,6 +38,7 @@ lib.foldl lib.recursiveUpdate { } (
     ./gitops.nix
     ./bootstrap-workflow.nix
     ./flatpak.nix
+    ./webapps.nix
     ./steam-config.nix
   ]
 )

@@ -56,10 +56,13 @@
       #   nix run .#shell-tests   (runs on the host, not the sandbox — see tests/shell)
       # ft_py pytest suite (python-tests), run via the python-tests workflow or:
       #   nix run .#python-tests  (against the framework's ft-py-test-env venv)
+      # mullet-rs cargo + bats suite (rust-tests), run via the rust-tests workflow or:
+      #   nix run .#rust-tests    (runs on the host, not the sandbox — see tests/rust)
       packages.x86_64-linux =
         (import ./tests/vm { inherit inputs nixpkgs; })
         // (import ./tests/shell/package.nix { inherit inputs nixpkgs; })
-        // (import ./tests/python/package.nix { inherit inputs nixpkgs; });
+        // (import ./tests/python/package.nix { inherit inputs nixpkgs; })
+        // (import ./tests/rust/package.nix { inherit inputs nixpkgs; });
 
       checks.x86_64-linux.colmena-hive =
         assert nixpkgs.lib.assertMsg (exampleTags == [ "example" ])

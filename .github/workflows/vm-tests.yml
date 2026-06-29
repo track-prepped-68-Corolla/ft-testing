@@ -48,4 +48,5 @@ jobs:
             .#vm-git-workflow-load \
             .#vm-gitops-load \
             .#vm-flatpak-load \
+            .#vm-webapps-load \
             .#vm-steam-config-load
