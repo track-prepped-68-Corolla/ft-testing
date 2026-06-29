@@ -32,8 +32,11 @@ async def test_run_capture_reports_nonzero_exit():
 
 
 async def test_streamed_command_yields_combined_stdout_and_stderr_in_order():
+    # -u forces unbuffered stdout so 'a'/'c' hit the merged pipe in write
+    # order; stdout is otherwise block-buffered (not a tty) while stderr
+    # isn't, letting 'b' arrive first regardless of program order.
     cmd = StreamedCommand(
-        ["python3", "-c", "import sys; print('a'); sys.stderr.write('b\\n'); print('c')"]
+        ["python3", "-u", "-c", "import sys; print('a'); sys.stderr.write('b\\n'); print('c')"]
     )
     lines = [line.text async for line in cmd]
     assert lines == ["a", "b", "c"]
