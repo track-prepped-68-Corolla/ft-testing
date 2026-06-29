@@ -37,5 +37,6 @@ lib.foldl lib.recursiveUpdate { } (
     ./git-workflow.nix
     ./gitops.nix
     ./bootstrap-workflow.nix
+    ./flatpak.nix
   ]
 )
