@@ -8,3 +8,7 @@ result-*
 
 # local-only repo path (written by bootstrap; never committed)
 /var/local/
+
+# Python bytecode cache (pytest runs against tests/python/)
+__pycache__/
+*.pyc
