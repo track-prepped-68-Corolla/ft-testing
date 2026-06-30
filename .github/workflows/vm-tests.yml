@@ -73,7 +73,6 @@ jobs:
           done
 
           total=${#tests[@]}
-          failed=$(echo "$failures" | wc -w)
 
           {
             echo "## VM Smoke Tests — $(date -u '+%Y-%m-%d %H:%M UTC')"
@@ -87,5 +86,9 @@ jobs:
               done
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -n "$failures" ]; then
+            echo "FAILED:$failures" >&2
+          fi
 
           [ -z "$failures" ]
