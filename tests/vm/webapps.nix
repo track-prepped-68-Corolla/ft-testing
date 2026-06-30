@@ -45,6 +45,7 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
+      machine.wait_for_unit("home-manager-admin.service")
       desktop_file = "/home/admin/.local/share/applications/example.desktop"
       machine.succeed(f"test -f {desktop_file}")
       machine.succeed(f"grep -Eq '^Exec=.*/bin/chromium ' {desktop_file}")
