@@ -49,9 +49,9 @@ in
       desktop_file = "/home/admin/.local/share/applications/example.desktop"
       machine.succeed(f"test -f {desktop_file}")
       machine.succeed(f"grep -Eq '^Exec=.*/bin/chromium ' {desktop_file}")
-      machine.succeed(f"grep -q -- \"--app='https://example.com/'\" {desktop_file}")
+      machine.succeed(f"grep -q -- '--app=https://example.com/' {desktop_file}")
       machine.succeed(
-          f"grep -q -- \"--user-data-dir='/home/admin/.local/share/ft-webapps/example'\" {desktop_file}"
+          f"grep -q -- '--user-data-dir=/home/admin/.local/share/ft-webapps/example' {desktop_file}"
       )
       machine.succeed("test -d /home/admin/.local/share/ft-webapps/icons")
     '';
