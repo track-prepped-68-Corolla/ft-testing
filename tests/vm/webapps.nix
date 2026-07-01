@@ -46,6 +46,17 @@ in
     testScript = ''
       machine.wait_for_unit("multi-user.target")
       machine.wait_for_unit("home-manager-admin.service")
+      # Diagnose the HM generation to check whether example.desktop is in the
+      # managed-files set (store issue) or just not linked (link-generation issue).
+      for cmd in [
+          "find /home/admin -maxdepth 5 \\( -type f -o -type l \\) 2>&1 | sort",
+          "readlink /home/admin/.local/state/home-manager/gcroots/current-home 2>&1",
+          "find $(readlink /home/admin/.local/state/home-manager/gcroots/current-home 2>/dev/null || echo /nonexistent)/home-files -name '*.desktop' 2>&1",
+          "systemctl status home-manager-admin.service --no-pager -l 2>&1",
+      ]:
+          rc, out = machine.execute(cmd)
+          print(f"[diag] $ {cmd}  (rc={rc})")
+          print(out)
       desktop_file = "/home/admin/.local/share/applications/example.desktop"
       machine.succeed(f"test -f {desktop_file}")
       machine.succeed(f"grep -Eq '^Exec=.*/bin/chromium ' {desktop_file}")
