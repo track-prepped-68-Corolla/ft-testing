@@ -46,18 +46,6 @@ in
     testScript = ''
       machine.wait_for_unit("multi-user.target")
       machine.wait_for_unit("home-manager-admin.service")
-      # Diagnostics: print directory state before asserting, so CI logs are
-      # informative even when the assertion fails.
-      for cmd in [
-          "ls -la /home/admin/",
-          "ls -la /home/admin/.local/share/ 2>&1",
-          "ls -la /home/admin/.local/share/applications/ 2>&1",
-          "find /home/admin -name '*.desktop' 2>&1",
-          "systemctl status home-manager-admin.service --no-pager 2>&1",
-      ]:
-          rc, out = machine.execute(cmd)
-          print(f"[diag] $ {cmd}  (rc={rc})")
-          print(out)
       desktop_file = "/home/admin/.local/share/applications/example.desktop"
       machine.succeed(f"test -f {desktop_file}")
       machine.succeed(f"grep -Eq '^Exec=.*/bin/chromium ' {desktop_file}")
