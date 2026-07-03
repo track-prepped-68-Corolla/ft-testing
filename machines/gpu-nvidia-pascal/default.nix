@@ -24,4 +24,8 @@
   ft.facter.reportPath = ../../fixtures/gpu/nvidia-pascal.json;
   ft.gpu.enable = true;
   ft.gpu.nvidia.openKernelModules = false;
+
+  # ft.cli now defaults to true (ergonomics on real consumer machines);
+  # this eval-only fixture doesn't need it and has no real ft.repoPath.
+  ft.cli.enable = false;
 }

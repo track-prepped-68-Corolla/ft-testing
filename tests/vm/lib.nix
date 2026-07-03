@@ -58,12 +58,18 @@ let
       };
 
   baseConfig =
-    { ... }:
+    { lib, ... }:
     {
       imports = [ vmTestBase ];
       ft.core.stateVersion = "25.05";
       ft.users.initialPasswords.admin = "test";
       hardware.bluetooth.enable = false;
+      # ft.cli defaults to true in the framework now, so every VM test node
+      # gets it whether the individual test cares or not - give it a non-
+      # default repoPath here so the framework's ft.cli assertion passes
+      # everywhere by default. lib.mkDefault so individual test files
+      # (e.g. cli.nix) can still set their own real value.
+      ft.repoPath = lib.mkDefault "/tmp/fake-repo";
     };
 in
 {

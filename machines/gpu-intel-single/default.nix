@@ -23,4 +23,8 @@
 
   ft.facter.reportPath = ../../fixtures/gpu/intel-single.json;
   ft.gpu.enable = true;
+
+  # ft.cli now defaults to true (ergonomics on real consumer machines);
+  # this eval-only fixture doesn't need it and has no real ft.repoPath.
+  ft.cli.enable = false;
 }
