@@ -54,6 +54,7 @@ jobs:
             vm-wine-load
             vm-git-workflow-load
             vm-gitops-load
+            vm-gitops-home-load
             vm-flatpak-load
             vm-webapps-load
             vm-steam-config-load

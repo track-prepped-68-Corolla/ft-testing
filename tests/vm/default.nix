@@ -36,6 +36,7 @@ lib.foldl lib.recursiveUpdate { } (
     ./wine.nix
     ./git-workflow.nix
     ./gitops.nix
+    ./gitops-home.nix
     ./bootstrap-workflow.nix
     ./flatpak.nix
     ./webapps.nix
