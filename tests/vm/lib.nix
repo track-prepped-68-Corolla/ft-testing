@@ -64,10 +64,12 @@ let
       ft.core.stateVersion = "25.05";
       ft.users.initialPasswords.admin = "test";
       hardware.bluetooth.enable = false;
-      # ft.cli now defaults to on, which requires ft.repoPath — no test node
-      # has a real consumer checkout, so default it off. mkDefault lets
-      # cli.nix's own node override it to test the real thing.
-      ft.cli.enable = lib.mkDefault false;
+      # ft.cli defaults to on in the framework now, so every VM test node
+      # gets it whether the individual test cares or not - give it a non-
+      # default repoPath here so the framework's ft.cli assertion passes
+      # everywhere by default. lib.mkDefault so individual test files
+      # (e.g. cli.nix) can still set their own real value.
+      ft.repoPath = lib.mkDefault "/tmp/fake-repo";
     };
 in
 {
