@@ -16,7 +16,10 @@ in
       {
         imports = [ baseConfig ];
         ft.steamConfig.enable = true;
-        programs.steam.config.apps."620".launchOptionsStr = "FOO=bar %command%";
+        programs.steam.config.apps."620" = {
+          id = 620;
+          launchOptionsStr = "FOO=bar %command%";
+        };
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
