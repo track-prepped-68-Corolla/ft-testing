@@ -21,6 +21,9 @@
 
   ft.core.stateVersion = "25.05";
 
+  # Eval-only test fixture: no real consumer repo checkout on this host.
+  ft.cli.enable = false;
+
   ft.facter.reportPath = ../../fixtures/gpu/intel-single.json;
   ft.gpu.enable = true;
 }
