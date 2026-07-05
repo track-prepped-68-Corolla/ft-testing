@@ -58,12 +58,16 @@ let
       };
 
   baseConfig =
-    { ... }:
+    { lib, ... }:
     {
       imports = [ vmTestBase ];
       ft.core.stateVersion = "25.05";
       ft.users.initialPasswords.admin = "test";
       hardware.bluetooth.enable = false;
+      # ft.cli now defaults to on, which requires ft.repoPath — no test node
+      # has a real consumer checkout, so default it off. mkDefault lets
+      # cli.nix's own node override it to test the real thing.
+      ft.cli.enable = lib.mkDefault false;
     };
 in
 {
