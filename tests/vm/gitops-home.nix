@@ -10,10 +10,11 @@ in
   #
   # Actual deployment is out of scope, mirroring the NixOS-side comin test: a
   # real `home-manager switch` would need the framework + nixpkgs sources
-  # evaluable offline inside the sandbox. The seeded remote is an empty bare
-  # repo (no commit on remote.branch), so the daemon clones it and polls but
-  # never attempts a switch — this asserts the user unit runs and completes a
-  # real git clone against the remote.
+  # evaluable offline inside the sandbox. The seeded remote has one empty
+  # commit on main (git clone requires the branch to exist) but no
+  # flake.nix, so the daemon's own switch attempt fails and retries
+  # internally — this asserts the user unit runs and completes a real git
+  # clone against the remote.
   vm-gitops-home-load = mkTest {
     name = "ft-gitops-home-load";
     nodes.machine =
@@ -55,11 +56,21 @@ in
       machine.wait_for_unit("multi-user.target")
       machine.wait_for_unit("home-manager-admin.service")
 
-      # Provide the local remote the daemon is configured to poll. An empty
-      # bare repo has no commit on the branch, so the daemon clones it but
-      # never attempts a switch.
+      # Provide the local remote the daemon is configured to poll. `git clone
+      # --branch main` requires that branch to actually exist, so seed one
+      # empty commit — the daemon will attempt a `home-manager switch` against
+      # it and fail (no flake.nix here), but that happens inside its own retry
+      # loop and doesn't affect the assertions below: the clone itself only
+      # needs the branch to exist, not a buildable config.
       machine.succeed("git init --bare /srv/gitops-remote-home")
       machine.succeed("chmod -R a+rwX /srv/gitops-remote-home")
+      machine.succeed(
+          "git init -q -b main /tmp/gitops-home-seed"
+          " && git -C /tmp/gitops-home-seed -c user.email=test@example.com -c user.name=test"
+          " commit -q --allow-empty -m seed"
+          " && git -C /tmp/gitops-home-seed remote add origin /srv/gitops-remote-home"
+          " && git -C /tmp/gitops-home-seed push -q origin main"
+      )
 
       # Home Manager's user services only run once the user's systemd
       # instance is up; enable-linger brings it up without a real login.
