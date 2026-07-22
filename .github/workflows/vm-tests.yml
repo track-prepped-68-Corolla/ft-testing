@@ -58,6 +58,7 @@ jobs:
             vm-flatpak-load
             vm-webapps-load
             vm-steam-config-load
+            vm-moonlight-load
           )
           for test in "${tests[@]}"; do
             echo "::group::$test"

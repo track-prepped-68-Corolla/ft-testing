@@ -41,5 +41,6 @@ lib.foldl lib.recursiveUpdate { } (
     ./flatpak.nix
     ./webapps.nix
     ./steam-config.nix
+    ./moonlight.nix
   ]
 )
