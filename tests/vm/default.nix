@@ -22,7 +22,7 @@ lib.foldl lib.recursiveUpdate { } (
   map (f: import f args) [
     ./core-boot.nix
     ./tailscale-load.nix
-    ./podman-rootless.nix
+    ./containers.nix
     ./printing.nix
     ./keepass.nix
     ./nix-index.nix
