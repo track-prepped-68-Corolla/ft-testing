@@ -40,7 +40,7 @@ jobs:
           tests=(
             vm-core-boot
             vm-tailscale-load
-            vm-podman-rootless-load
+            vm-containers-rootless-podman
             vm-printing-load
             vm-keepass-load
             vm-nix-index-load
