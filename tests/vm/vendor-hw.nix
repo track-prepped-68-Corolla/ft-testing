@@ -38,7 +38,10 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      machine.succeed("ls /run/current-system/sw/bin | grep -qi legion")
+      # grep without -q: -q closes its stdin on the first match, which
+      # SIGPIPEs ls mid-write ("Broken pipe") and fails the pipeline under
+      # pipefail even though the match was real. Plain grep reads to EOF.
+      machine.succeed("ls /run/current-system/sw/bin | grep -i legion")
     '';
   };
 
@@ -55,7 +58,8 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      machine.succeed("ls /run/current-system/sw/bin | grep -qi mcontrolcenter")
+      # grep without -q — see the Lenovo test above for why -q is unsafe here.
+      machine.succeed("ls /run/current-system/sw/bin | grep -i mcontrolcenter")
     '';
   };
 
@@ -71,7 +75,8 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      machine.succeed("ls /run/current-system/sw/bin | grep -qi polychromatic")
+      # grep without -q — see the Lenovo test above for why -q is unsafe here.
+      machine.succeed("ls /run/current-system/sw/bin | grep -i polychromatic")
     '';
   };
 
