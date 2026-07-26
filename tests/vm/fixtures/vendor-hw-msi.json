@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "virtualisation": "none",
+  "hardware": {
+    "cpu": [
+      {
+        "architecture": "x86_64",
+        "vendor_name": "GenuineIntel",
+        "model_name": "Intel Test CPU",
+        "cores": 4,
+        "units": 8
+      }
+    ],
+    "usb": []
+  },
+  "smbios": {
+    "system": {
+      "handle": 1,
+      "manufacturer": "Micro-Star International Co., Ltd.",
+      "product": "MSI Test Laptop",
+      "version": "1.0"
+    },
+    "chassis": [
+      {
+        "handle": 3,
+        "manufacturer": "Micro-Star International Co., Ltd.",
+        "version": "1.0",
+        "chassis_type": {
+          "hex": "000a",
+          "name": "Notebook",
+          "value": 10
+        }
+      }
+    ]
+  }
+}

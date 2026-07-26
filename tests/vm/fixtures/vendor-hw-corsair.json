@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "virtualisation": "none",
+  "hardware": {
+    "cpu": [
+      {
+        "architecture": "x86_64",
+        "vendor_name": "GenuineIntel",
+        "model_name": "Intel Test CPU",
+        "cores": 4,
+        "units": 8
+      }
+    ],
+    "usb": [
+      {
+        "vendor": {
+          "hex": "1b1c",
+          "name": "Corsair"
+        }
+      }
+    ]
+  },
+  "smbios": {
+    "system": {
+      "handle": 1,
+      "manufacturer": "Generic",
+      "product": "Generic Desktop",
+      "version": "1.0"
+    },
+    "chassis": [
+      {
+        "handle": 3,
+        "manufacturer": "Generic",
+        "version": "1.0",
+        "chassis_type": {
+          "hex": "0003",
+          "name": "Desktop",
+          "value": 3
+        }
+      }
+    ]
+  }
+}

@@ -50,6 +50,13 @@ jobs:
             vm-mullet-load
             vm-facter-load
             vm-vendor-hw-asus
+            vm-vendor-hw-lenovo
+            vm-vendor-hw-msi
+            vm-vendor-hw-razer
+            vm-vendor-hw-logitech
+            vm-vendor-hw-corsair
+            vm-vendor-hw-openrgb
+            vm-vendor-hw-handheld
             vm-rclone-load
             vm-wine-load
             vm-git-workflow-load
