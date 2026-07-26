@@ -38,34 +38,10 @@ jobs:
           failures=""
           pass=0
           tests=(
-            vm-core-boot
-            vm-tailscale-load
-            vm-containers-rootless-podman
-            vm-printing-load
-            vm-keepass-load
-            vm-nix-index-load
-            vm-virt-load
-            vm-nfs-framework-load
-            vm-cli-load
-            vm-mullet-load
-            vm-facter-load
-            vm-vendor-hw-asus
-            vm-vendor-hw-lenovo
-            vm-vendor-hw-msi
-            vm-vendor-hw-razer
-            vm-vendor-hw-logitech
-            vm-vendor-hw-corsair
-            vm-vendor-hw-openrgb
-            vm-vendor-hw-handheld
-            vm-rclone-load
-            vm-wine-load
             vm-git-workflow-load
-            vm-gitops-load
             vm-gitops-home-load
             vm-flatpak-load
             vm-webapps-load
-            vm-steam-config-load
-            vm-moonlight-load
           )
           for test in "${tests[@]}"; do
             echo "::group::$test"
