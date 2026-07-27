@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "virtualisation": "none",
+  "hardware": {
+    "cpu": [
+      {
+        "architecture": "x86_64",
+        "vendor_name": "AuthenticAMD",
+        "model_name": "AMD Test CPU",
+        "cores": 4,
+        "units": 8
+      }
+    ],
+    "usb": []
+  },
+  "smbios": {
+    "system": {
+      "handle": 1,
+      "manufacturer": "Generic",
+      "product": "Generic Handheld",
+      "version": "1.0"
+    },
+    "chassis": [
+      {
+        "handle": 3,
+        "manufacturer": "Generic",
+        "version": "1.0",
+        "chassis_type": {
+          "hex": "000b",
+          "name": "Hand Held",
+          "value": 11
+        }
+      }
+    ]
+  }
+}
