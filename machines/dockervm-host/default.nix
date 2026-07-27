@@ -31,11 +31,11 @@
   ft.cli.enable = false;
 
   # The unit under guard: attach the standalone docker-vm guest by reference.
-  # vmMac matches the tap MAC declared in vms/docker-vm.
+  # The tap MAC + interface name are derived from the instance name on both
+  # sides (ft.microvms + the guest baseline), so nothing is set here.
   ft.microvms.instances.docker-vm = {
     enable = true;
     vmAddressSuffix = 2;
-    vmMac = "02:00:00:00:00:01";
     hostInterface = "eth0";
   };
 }

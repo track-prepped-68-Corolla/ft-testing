@@ -17,13 +17,8 @@
 # =============================================================================
 { ... }:
 {
-  microvm.interfaces = [
-    {
-      type = "tap";
-      id = "tap-docker-vm";
-      mac = "02:00:00:00:00:01";
-    }
-  ];
+  # The tap interface (name + MAC) is auto-derived from the VM name by the guest
+  # baseline, matching the host's ft.microvms lease — nothing to declare here.
 
   # Docker's data directory on a persistent disk image under the host state dir
   # (microvm.nix creates the image inside /var/lib/microvm/docker-vm, which
