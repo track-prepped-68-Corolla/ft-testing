@@ -9,10 +9,9 @@
 # microvm.vms.docker-vm.flake = self attach, plus the auto host-share
 # provisioning. Never built or booted, only evaluated.
 #
-# (The old dockervm-full also guarded the guest sops [secrets] tiers + host
-# auto-apply; those are deferred until the guest-side secrets-share decoupling
-# is designed — a standalone guest cannot read the host's repoPath-relative sops
-# tree the way the inline guest did.)
+# (The secrets-on path — guest sops [secrets] tiers + host auto-apply, the old
+# dockervm-full's job — is guarded separately by machines/dockervm-host-secrets
+# + vms/docker-vm-secrets.)
 # =============================================================================
 { ... }:
 
