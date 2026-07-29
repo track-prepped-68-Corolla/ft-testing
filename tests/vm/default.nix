@@ -21,6 +21,7 @@ in
 lib.foldl lib.recursiveUpdate { } (
   map (f: import f args) [
     ./core-boot.nix
+    ./niri.nix
     ./tailscale-load.nix
     ./containers.nix
     ./printing.nix
