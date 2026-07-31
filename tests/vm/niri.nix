@@ -3,12 +3,16 @@ let
   inherit (import ./lib.nix { inherit inputs nixpkgs; }) baseConfig mkTest;
 in
 {
-  # ft.niri: niri is on PATH and registers itself as a selectable Wayland
-  # session (the .desktop file a display manager reads from sessionPackages).
-  # defaultSession isn't exercised here: it only has an observable effect once
-  # a real display manager (e.g. ft.cosmicGreeter, out of scope for this VM)
-  # consumes services.displayManager.defaultSession when generating its own
-  # config, so there's no DM-agnostic runtime effect to assert on here.
+  # ft.niri: niri is on PATH. Session-registration (services.displayManager.
+  # sessionPackages) is deliberately not asserted here: per nixpkgs'
+  # nixos/modules/services/display-managers/default.nix, that data is only
+  # materialized into services.displayManager.sessionData.desktops (exposed
+  # via XDG_DATA_DIRS, not symlinked into /run/current-system/sw) once
+  # services.displayManager.enable is true — which only an actual display
+  # manager module (e.g. ft.cosmicGreeter) sets, and pairing one in here is
+  # out of scope for a niri-only smoke test. Same reasoning covers
+  # defaultSession: it only has an observable effect once a real display
+  # manager consumes it when generating its own config.
   vm-niri-session = mkTest {
     name = "ft-niri-session";
     nodes.machine =
@@ -20,7 +24,6 @@ in
     testScript = ''
       machine.wait_for_unit("multi-user.target")
       machine.succeed("which niri")
-      machine.succeed("test -f /run/current-system/sw/share/wayland-sessions/niri.desktop")
     '';
   };
 }
