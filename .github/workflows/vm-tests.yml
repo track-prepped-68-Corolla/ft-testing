@@ -39,6 +39,7 @@ jobs:
           pass=0
           tests=(
             vm-core-boot
+            vm-niri-session
             vm-tailscale-load
             vm-containers-rootless-podman
             vm-printing-load
