@@ -3,6 +3,11 @@ name: VM Smoke Tests
 on:
   push:
   workflow_dispatch:
+    inputs:
+      test:
+        description: "Single test package to run (e.g. vm-cad3d-load). Leave empty to run the full suite."
+        required: false
+        type: string
 
 jobs:
   vm-smoke:
@@ -69,6 +74,11 @@ jobs:
             vm-steam-config-load
             vm-moonlight-load
           )
+
+          if [ -n "${{ github.event.inputs.test }}" ]; then
+            tests=("${{ github.event.inputs.test }}")
+          fi
+
           for test in "${tests[@]}"; do
             echo "::group::$test"
             if nix build -L --no-link \
