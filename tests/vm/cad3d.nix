@@ -35,13 +35,13 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/orca-slicer")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/blender")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/freecad")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/openscad")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/inkscape")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/meshlab")
-      machine.succeed("test -x /etc/profiles/per-user/admin/bin/f3d")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/orca-slicer")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/blender")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/freecad")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/openscad")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/inkscape")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/meshlab")
+      machine.succeed("test -x /home/admin/.nix-profile/bin/f3d")
     '';
   };
 }
