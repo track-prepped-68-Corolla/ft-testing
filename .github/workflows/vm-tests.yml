@@ -60,6 +60,7 @@ jobs:
             vm-vendor-hw-handheld
             vm-rclone-load
             vm-wine-load
+            vm-cad3d-load
             vm-git-workflow-load
             vm-gitops-load
             vm-gitops-home-load
