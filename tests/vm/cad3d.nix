@@ -36,9 +36,9 @@ in
     testScript = ''
       machine.wait_for_unit("multi-user.target")
       print(machine.succeed(
-          "readlink -f /home/admin/.nix-profile; "
-          "ls -la /home/admin/.local/state/nix/profiles/; "
-          "ls $(readlink -f /home/admin/.nix-profile)/bin | head -100"
+          "for b in orca-slicer blender freecad openscad inkscape meshlab f3d; do"
+          "  echo \"$b: $(test -e /home/admin/.nix-profile/bin/$b && echo FOUND || echo MISSING)\";"
+          "done"
       ))
       machine.succeed("test -x /home/admin/.nix-profile/bin/orca-slicer")
       machine.succeed("test -x /home/admin/.nix-profile/bin/blender")
