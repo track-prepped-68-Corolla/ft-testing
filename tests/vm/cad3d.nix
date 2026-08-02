@@ -20,7 +20,6 @@ in
       machine.succeed("which openscad")
       machine.succeed("which inkscape")
       machine.succeed("which meshlab")
-      machine.succeed("which admesh")
       machine.succeed("which f3d")
     '';
   };
