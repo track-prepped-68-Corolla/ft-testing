@@ -35,11 +35,6 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      print(machine.succeed(
-          "for b in orca-slicer blender freecad openscad inkscape meshlab f3d; do"
-          "  echo \"$b: $(test -e /home/admin/.nix-profile/bin/$b && echo FOUND || echo MISSING)\";"
-          "done"
-      ))
       machine.succeed("test -x /home/admin/.nix-profile/bin/orca-slicer")
       machine.succeed("test -x /home/admin/.nix-profile/bin/blender")
       machine.succeed("test -x /home/admin/.nix-profile/bin/freecad")
