@@ -35,7 +35,11 @@ in
       };
     testScript = ''
       machine.wait_for_unit("multi-user.target")
-      print(machine.succeed("find /home/admin -maxdepth 5 2>&1; find /nix/var/nix/profiles/per-user/admin 2>&1 || true"))
+      print(machine.succeed(
+          "readlink -f /home/admin/.nix-profile; "
+          "ls -la /home/admin/.local/state/nix/profiles/; "
+          "ls $(readlink -f /home/admin/.nix-profile)/bin | head -100"
+      ))
       machine.succeed("test -x /home/admin/.nix-profile/bin/orca-slicer")
       machine.succeed("test -x /home/admin/.nix-profile/bin/blender")
       machine.succeed("test -x /home/admin/.nix-profile/bin/freecad")
