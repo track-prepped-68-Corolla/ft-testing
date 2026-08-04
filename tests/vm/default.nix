@@ -35,6 +35,7 @@ lib.foldl lib.recursiveUpdate { } (
     ./vendor-hw.nix
     ./rclone.nix
     ./wine.nix
+    ./cad3d.nix
     ./git-workflow.nix
     ./gitops.nix
     ./gitops-home.nix
