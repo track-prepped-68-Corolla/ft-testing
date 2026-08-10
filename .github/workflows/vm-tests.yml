@@ -40,6 +40,7 @@ jobs:
           tests=(
             vm-core-boot
             vm-niri-session
+            vm-niri-config
             vm-tailscale-load
             vm-containers-rootless-podman
             vm-printing-load
