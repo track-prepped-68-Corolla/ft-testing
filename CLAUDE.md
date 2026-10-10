@@ -19,8 +19,9 @@ It serves three roles:
    of `nix flake check`.
 
 `ft-testing` shares its template content (machines/users) with the
-`ft-template` repo; `ft-template` is `ft-testing` minus `tests/` and
-`machines/strix-vm`. Keep design changes to the shared content in sync by
+`ft-template` repo; `ft-template` is `ft-testing` minus `tests/`, `fixtures/`,
+`machines/strix-vm`, the eval-only guard machines, and every VM except
+`vms/docker-vm`. Keep design changes to the shared content in sync by
 convention.
 
 `flake.nix` delegates to `ft-framework.lib.mkFlake inputs` and merges the VM
@@ -39,6 +40,16 @@ machines/
     var/facter.json        # hardware report — source of truth for system arch
   strix-vm/               # standalone interactive QEMU test VM
     default.nix
+  dockervm-host/          # eval-only guards: run vms/docker-vm{,-secrets} by
+  dockervm-host-secrets/  # reference via ft.microvms (+ ft.komodoApply)
+  gpu-*/                  # eval-only ft.gpu detection guards, one per fixture
+  vendorHw-*/             # eval-only ft.vendorHw detection guards, one per fixture
+vms/                      # standalone microVM guests (flake-parts/vms.nix)
+  docker-vm/              # Docker + Komodo template (shared with ft-template)
+  docker-vm-secrets/      # same, with ft.vmSecrets + Komodo [secrets] tiers
+  probe/                  # minimal generator exercise — no appliance
+fixtures/                 # hand-crafted facter.json reports for gpu/ and vendorHw/
+                          # detection (used by the guard machines and VM tests)
 users/
   example/                # template user (generic dotfiles, shared with guest)
     profiles/             # example profiles (gaming, development) — exercises
